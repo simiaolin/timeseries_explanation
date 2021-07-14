@@ -1,0 +1,120 @@
+\documentclass[master=mai,masteroption=bda]{kulemt}
+\setup{% Remove the "%" on the next line when using UTF-8 character encoding
+  %inputenc=utf8,
+  title={Explaining time series clusters},
+  author={Simiao Lin},
+  promotor={Prof. Hendrik Blockeel\and Prof. Wannes Meert},
+  assessor={??\and ??},
+  assistant={Dr. Aras Yurtman}}
+% Remove the "%" on the next line for generating the cover page
+%\setup{coverpageonly}
+% Remove the "%" before the next "\setup" to generate only the first pages
+% (e.g., if you are a Word user).
+%\setup{frontpagesonly}
+
+% Choose the main text font (e.g., Latin Modern)
+\setup{font=lm}
+
+% If you want to include other LaTeX packages, do it here. 
+
+% Finally the hyperref package is used for pdf files.
+% This can be commented out for printed versions.
+\usepackage[pdfusetitle,colorlinks,plainpages=false]{hyperref}
+
+%%%%%%%
+% The lipsum package is used to generate random text.
+% You never need this in a real master's thesis text!
+\IfFileExists{lipsum.sty}%
+ {\usepackage{lipsum}\setlipsumdefault{11-13}}%
+ {\newcommand{\lipsum}[1][11-13]{\par And some text: lipsum ##1.\par}}
+%%%%%%%
+
+%\includeonly{chap-n}
+\begin{document}
+
+\begin{preface}
+Throughout the writing of this thesis I have received a great deal of support and assistance.
+
+I would first like to thank my advisor, Aras Yurtman. You are always so supportive and patient. I learn a lot on how to conduct a research from you on our weekly meeting. I could not have completed this thesis without advice and encouragement you give me all the time. 
+
+I would also like to acknowledge my supervisors, Wannes Meert and Prof. Hendrik Blockeel,  whose expertise was invaluable in formulating the research questions and methodology. 
+
+In addition, I would like to thank my accessors for reading the text.
+
+Finally, my gratitude also goes to my family for their sympathetic ear. You are always there resting my mind outside the research.
+
+\end{preface}
+
+\tableofcontents*
+
+\begin{abstract}
+ Many applications of machine learning involve time series data (e.g. sensor measurements). An approach that has been successfully applied in the DTAI research group is \texttt{COBRAS-TS}, a semi-supervised time series clustering to detect novel patterns or features. Such features can then be used in applications such as anomaly detection or prognostics.
+ 
+An important aspect of applying machine learning models to real-world use cases is interpretability. These novel features need to be explained or shown to domain experts. In this thesis I make use of the Dynamic Time Warping (\texttt{DTW}) distance measure, \texttt{DTW} barycenter averaging(\texttt{DBA}) and contraints from \texttt{COBRAS} to summarize why a set of time series are clustered together and how one cluster differs from other clusters. 
+
+
+\end{abstract}
+
+% A list of figures and tables is optional
+%\listoffigures
+%\listoftables
+% If you only have a few figures and tables you can use the following instead
+
+\listoffiguresandtables
+% The list of symbols is also optional.
+% This list must be created manually, e.g., as follows:
+\chapter{List of Abbreviations and Symbols}
+\section*{Abbreviations}
+\begin{flushleft}
+  \renewcommand{\arraystretch}{1.1}
+  \begin{tabularx}{\textwidth}{@{}p{12mm}X@{}}
+    LoG   & Laplacian-of-Gaussian \\
+    MSE   & Mean Square error \\
+    PSNR  & Peak Signal-to-Noise ratio \\
+  \end{tabularx}
+\end{flushleft}
+\section*{Symbols}
+\begin{flushleft}
+  \renewcommand{\arraystretch}{1.1}
+  \begin{tabularx}{\textwidth}{@{}p{12mm}X@{}}
+    42    & ``The Answer to the Ultimate Question of Life, the Universe,
+            and Everything'' according to \cite{h2g2} \\
+    $c$   & Speed of light \\
+    $E$   & Energy \\
+    $m$   & Mass \\
+    $\pi$ & The number pi \\
+  \end{tabularx}
+\end{flushleft}
+
+% Now comes the main text
+\mainmatter
+
+\include{intro}
+\include{chap-1}
+\include{chap-2}
+\include{chap-3}
+\include{chap-4}
+\include{chap-5}
+\include{chap-6}
+
+\include{conclusion}
+
+% If you have appendices:
+\appendixpage*          % if wanted
+\appendix
+\include{app-A}
+% ... and so on until
+\include{app-n}
+
+\backmatter
+% The bibliography comes after the appendices.
+% You can replace the standard "abbrv" bibliography style by another one.
+\bibliographystyle{abbrv}
+\bibliography{references}
+
+\end{document}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: t
+%%% End: 

@@ -1,0 +1,15 @@
+\chapter{Introduction}
+\label{cha:intro}
+The goal of semi-supervised learning is to combine opinions of experts together with existed information. COBRAS is a most query-efficient semi-supervised clustering method. It has a time-series based version - COBRAS TS.  Clustering on time-series data can be of significant value in a number of scenarios in our daily life, such as clustering on the energy consumption data, electrocardiogram data, etc. However, how the clustering result is obtained is a black box or at least grey box to end users. I study here the explaination of the clustering result. There are two benifits doing so. Apart from providing end users a more huristic way of understanding the result, I can convince the experts who give opinions during the clustering process that the result is truely partly based on their knowledge.
+
+The DTW paradigm. DTW computes the best possible alignment between two time series of respective length n and m by computing first the n * m pairwise distance matrix between these points to solve then a dynamic program using Bellman's recursion with a quadratic (nm) cost.
+
+The DBA paradigm. Averaging on time series data is different from averaging on common data. DBA do not calculate the average by the Euclidean distance. Instead, it use DTW metioned above.
+
+Our contributions. I mainly provide two ways to explain the result. One is to show the properites of time series instances inside one cluster. The other one is to show the relationship entailment between two specific instances with information provided by experts to explain why they are clustered together or apart.
+
+Structure. After providing background material in chapter 1 and problem definition in chapter 2, I introduce in chapter 3 different types of deviation for time series instances in one cluster. I follow in chapter 4 by illustrating the relationship between time series instances with the help of must relatioship and cannot relationship provided by experts.  I close this paper in chapter 5 with pros and cons of my ways of explaining time series cluster and show potential applications.
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "thesis"
+%%% End: 
