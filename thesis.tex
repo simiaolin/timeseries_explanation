@@ -43,14 +43,15 @@ In addition, I would like to thank my accessors for reading the text.
 
 Finally, my gratitude also goes to my family for their sympathetic ear. You are always there resting my mind outside the research.
 
+
 \end{preface}
 
 \tableofcontents*
 
 \begin{abstract}
  Many applications of machine learning involve time series data (e.g. sensor measurements). An approach that has been successfully applied in the DTAI research group is \texttt{COBRAS-TS}, a semi-supervised time series clustering to detect novel patterns or features. Such features can then be used in applications such as anomaly detection or prognostics.
- 
-An important aspect of applying machine learning models to real-world use cases is interpretability. These novel features need to be explained or shown to domain experts. In this thesis I make use of the Dynamic Time Warping (\texttt{DTW}) distance measure, \texttt{DTW} barycenter averaging(\texttt{DBA}) and contraints from \texttt{COBRAS} to summarize why a set of time series are clustered together and how one cluster differs from other clusters. 
+
+An important aspect of applying machine learning models to real-world use cases is interpretability. These novel features need to be explained or shown to domain experts. In this thesis I make use of the Dynamic Time Warping (\texttt{DTW}) distance measure, \texttt{DTW} barycenter averaging(\texttt{DBA}) and contraints from   \texttt{COBRAS-TS}   to summarize why a set of time series are clustered together and how one cluster differs from other clusters. 
 
 
 \end{abstract}
@@ -68,9 +69,10 @@ An important aspect of applying machine learning models to real-world use cases 
 \begin{flushleft}
   \renewcommand{\arraystretch}{1.1}
   \begin{tabularx}{\textwidth}{@{}p{12mm}X@{}}
-    LoG   & Laplacian-of-Gaussian \\
-    MSE   & Mean Square error \\
-    PSNR  & Peak Signal-to-Noise ratio \\
+ 
+DTW       & Dynamic Time Warping     \\ 
+
+DBA       & DTW Barycenter Averaging \\    
   \end{tabularx}
 \end{flushleft}
 \section*{Symbols}
@@ -90,12 +92,12 @@ An important aspect of applying machine learning models to real-world use cases 
 \mainmatter
 
 \include{intro}
-\include{chap-1}
-\include{chap-2}
-\include{chap-3}
-\include{chap-4}
-\include{chap-5}
-\include{chap-6}
+\include{background_and_relatedwork}
+\include{problem_definition}
+\include{properties_of_a_cluster}
+\include{comparison_between_clusters}
+\include{cluster_membership}
+\include{pros_and_cons}
 
 \include{conclusion}
 
