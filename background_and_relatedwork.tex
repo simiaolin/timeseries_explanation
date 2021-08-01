@@ -79,10 +79,17 @@ As we can see from \fref{fig:arithmetic} and \fref{fig:dba}, DBA can capture the
 
 \section{Semi supervised time series clustering methods}
 
+\subsection{Semi-supervised learning}
+In supervised learning, we have the labels of all the instances, thus we can check the accuracy of our algorithms by comparing the expected labels and predicted labels of the instances. It enjoys clarity of data and is easy to train. However, labeling all the data is not a trival task, and sometimes it is not easy or even impossible to get the labels of data.
+
+In unsupervised learning, no data is labeled, and algorithms are expected to find patterns on these unlabeled data. It saves the effort of collecting the labels of data. However, it can not reflect any users' export knowledge.
+
+Clustering is subjective in nature. Different users might expect different clustering results given same dataset. In Semi-supervised learning, a small part of data are labeled and most of the data are unlabeled.  Little effort on collecting expert knowledge can contribute greatly to the clustering result. These small part of labeled data not only shape the result of clustering, but also accelerate the process of clustering. 
 \subsection{COBRA}
- Clustering is inherently subjective. Different users might expect different clustering results given same dataset. 
+COBRA is a constraint-based semi-supervised clustering method. Contraint-based clustering does not ask the users the labels of the instances directly. Instead, it queries the relation between instance pairs and adds contraints on the instances. There are two types of constraints, must-link and cannot-link. A must-link means that two instances should be in the same cluster, while a cannot-link means that two instances should be in different clusters. Apparently, the target should be asking users as few queries as possible to get a clustering close to the expected one.  
  
- COBRA is a constraint-based semi-supervised clustering method. It first use k-means algorithm to split instances into several super instances. Each super instance contains serveral instances. Later, it exploits expert knowledge by asking users most informative quries and add contraints on super instances. These contraints include must-link, meaning two super instances should be clustered together, and cannot-link, meaning two super instances should not be in the same cluster. It is a bottom-up clustering. 
+ It first use k-means algorithm to split instances into several super instances. Each super instance contains serveral instances. Later, it exploits expert knowledge by asking users most informative quries and add contraints on super instances. These contraints include must-link, meaning two super instances should be clustered together, and cannot-link, meaning two super instances should not be in the same cluster. It is a bottom-up clustering. 
+ 
 \subsection{COBRAS[detail]}
  There is one defect of COBRA. Once the super instance is formed, it will never change. COBRAS gives chance to super instance to split again later so that it can form clusters of better granuity.
 \subsection{COBRAS-TS[detail]}
