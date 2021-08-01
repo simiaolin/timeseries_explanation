@@ -86,8 +86,31 @@ In unsupervised learning, no data is labeled, and algorithms are expected to fin
 
 Clustering is subjective in nature. Different users might expect different clustering results given same dataset. In Semi-supervised learning, a small part of data are labeled and most of the data are unlabeled.  Little effort on collecting expert knowledge can contribute greatly to the clustering result. These small part of labeled data not only shape the result of clustering, but also accelerate the process of clustering. 
 \subsection{COBRA}
-COBRA is a constraint-based semi-supervised clustering method. Contraint-based clustering does not ask the users the labels of the instances directly. Instead, it queries the relation between instance pairs and adds contraints on the instances. There are two types of constraints, must-link and cannot-link. A must-link means that two instances should be in the same cluster, while a cannot-link means that two instances should be in different clusters. Apparently, the target should be asking users as few queries as possible to get a clustering close to the expected one.  
+COBRA is a constraint-based semi-supervised clustering method. 
+
+Contraint-based clustering does not ask the users the labels of the instances directly. Instead, it queries the relation between instance pairs and adds contraints on the instances. There are two types of constraints, must-link and cannot-link. A must-link means that two instances should be in the same cluster, while a cannot-link means that two instances should be in different clusters. Apparently, the target should be asking users as few queries as possible to get a clustering close to the expected one.  
+
+Suppose we have $  N$ instances, to get the relation between all the instance pairs we need $N*(N-1)/2$quries, so the query number increases exponentionally as the instance number grows. We can reduce the query number by introduing \textit{constraint entailment and transitivity}.  Must-link constraints are transitive:
+
+\begin{center}$must-link(A, B) \wedge must-link(B, C) \Rightarrow must-link(A, C)$\end{center}
+
+\noindent ,and cannot-link constraints have entailment property:
+
+\begin{center}$must-link(A, B) \wedge cannot-link(B, C) \Rightarrow cannot-link(A, C)$\end{center}
  
+\noindent As a result, whenever we get a constraint, we can apply the contraint entailment and transitivity to enlarge the constraint set. In this case, we can decrease the query number.
+
+The order the constraints are obtained is important. You can not do contraint expansion if you have two cannot-links, as both transitivity rule and entailment rule can not be used in this case. However, as long as one of the constraint is must-link, contraint expansion is possible. As a result, it would be better if we could get must-links earlier. In other words, users should be queried the most similar pair of instances.
+
+All of the above clustering methods produce very good clustering. Still, they need a large number of queries to reach perfect result. We need a better algorithm to decrease the query number, especially for clustering on large datasets.
+ \begin{figure}[htbp]
+ 		\centering
+ 		\includegraphics[width=6cm]{pics/related_work/cobra1}
+ 		\caption{different levels of contraint-based semi-supervised clustering}
+ 		\label{fig:contrain-based-level}
+
+ \end{figure}
+
  It first use k-means algorithm to split instances into several super instances. Each super instance contains serveral instances. Later, it exploits expert knowledge by asking users most informative quries and add contraints on super instances. These contraints include must-link, meaning two super instances should be clustered together, and cannot-link, meaning two super instances should not be in the same cluster. It is a bottom-up clustering. 
  
 \subsection{COBRAS[detail]}
