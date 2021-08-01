@@ -1,37 +1,92 @@
-\chapter{background and related work}
-\label{cha:2}
-A chapter is a logical unit. It normally starts with an introduction, which
-you are reading now. The last topic of the chapter holds the conclusion.
 
-\section{Time wrapping method}
-First comes the introduction to this topic.
+\chapter{Background and related work}
+\label{cha:related_work}
+Before all, time series related terminologies are introduced in more details.
+These include distance measurement methods, averaging methods and semi supervised clustering methods in perspective of time series. Apart from the basic ones, I also introduce the variant ones.
 
-\subsection{DTW [in introduction briefly, in background theoretically]}
-Please don't abuse enumerations: short enumerations shouldn't use
-``\verb|itemize|'' or ``\texttt{enumerate}'' environments.
-So \emph{never write}: 
-\begin{quote}
-	The Eiffel tower has three floors:
-	\begin{itemize}
-		\item the first one;
-		\item the second one;
-		\item the third one.
-	\end{itemize}
-\end{quote}
-But write:
-\begin{quote}
-	The Eiffel tower has three floors: the first one, the second one, and the
-	third one.
-\end{quote}
+\section{Dissimilarity measurement }
+Euclidean distance is commonly used in measuring distances between two points, two vectors, etc. It is simple and competitive for many senarios. However, it is not the best choice in some domains, such as time series. Two time series might be sensitive to time axis, even thought they share similar shapes they might not match well in Euclidean distance. A new way of calculating distance between time series is thus proposed, which is DTW(Dynamic Time Wrapping)
+\subsection{DTW}
+Dynamic time warping (DTW) is a well-known method to measure the distance between time series instances. Unlike Euclidean distance, which is the sum of the distance of instances in each time axis, as shown in \ref{algo:dtw}, DTW finds an optimal alignment between two time series. Intuitively, it uses dynamic programming to map two time series in a way that their peaks and their bottoms are mapped together. In other words, DTW maps their trends instead of their time axis.
+
+\begin{algorithm}[h] \label{algo:dtw}
+	\caption{DTW (s: array[0...n], t: array[0...m])}
+	\begin{algorithmic}[1]
+		\STATE DTW := array[0..n, 0..m]
+		\FOR {i := 0 to n}
+		\FOR {j := 0 to m}
+			\STATE DTW[i, j] := d(s[i], t[j])
+		\ENDFOR
+		\ENDFOR
+		\FOR { i := 1 to n}
+		 \STATE DTW[i, 0] += DTW[i-1, 0]
+		\ENDFOR
+		
+		\FOR { j := 1 to n}
+		\STATE DTW[0, j] += DTW[0, j-1]
+		\ENDFOR
+		
+		\FOR { i := 1 to n}
+		\FOR {j := 1 to m}	
+		\STATE DTW[i, j] += min(DTW[i-1, j],									
+							DTW[i, j-1],
+							DTW[i-1, j-1])
+		\ENDFOR	
+		\ENDFOR
+	   \STATE return DTW[n-1, m-1]						
+		
+	\end{algorithmic}
+\end{algorithm}
+
+\begin{figure}[htbp]
+	\centering
+	\begin{minipage}[t]{0.48\textwidth}
+		\centering
+		\includegraphics[width=6cm]{pics/related_work/dtw}
+		\caption{DTW}
+		\label{fig:dtw}
+	\end{minipage}
+
+\end{figure}
 \subsection{others (eg. soft, k-shape, in brief)}
-\subsection{reason of choice}
-\section{average method}
+\subsection{motivation for selecting DTW}
+DTW not only captures amplitude information of time series and computes their distance based on it, but also records how two time series are mapped to each other in the process of wrapping. In other words, the wrapping can be seen as evidence why two time series are similar to each other, or vise versa. DTW itself has good explanation ability.
+
+
+\section{Averaging methods}
+Apart from selecting the proper distance measure method for time series instances, choosing the right averaging method for time series instances is also of much importance. A suitable average of time series should reflect the overall trend of them as well as the peak and bottom message. 
 \subsection{DBA}
-\subsection{others [what if too long, be consistent,  can change the variable names of the equations]}
-\subsection{reason of choice}
+DTW Barycenter Averaging(DBA) is designed as such that first initialize the average as the medoid of the time series instances, then update the average by averaging the wrapping of other time series instances from the current average for serveral times. Note that the wrapping of the time series instance from the current average is calculated with DTW. 
+\subsection{others}
+\subsection{motivation for using DBA}
+As we can see from \fref{fig:arithmetic} and \fref{fig:dba}, DBA can capture the most important trend of instances, while the characteristic of the original instances are averaged in the time axis so the information about peaks and bottoms are blurred in the arithmetic mean. As a result, I select DBA as the averaging method in this paper. 
+
+\begin{figure}[htbp]
+	\centering
+	\begin{minipage}[t]{0.48\textwidth}
+		\centering
+		\includegraphics[width=6cm]{pics/related_work/arithmetic_mean}
+		\caption{Arithmetic mean}
+		\label{fig:arithmetic}
+	\end{minipage}
+	\begin{minipage}[t]{0.48\textwidth}
+		\centering
+		\includegraphics[width=6cm]{pics/related_work/DBA}
+		\caption{DBA}
+		\label{fig:dba}
+	\end{minipage}
+\end{figure}
 
 \section{Semi supervised time series clustering methods}
-\subsection{COBRAS-TS}
+
+\subsection{COBRA}
+ Clustering is inherently subjective. Different users might expect different clustering results given same dataset. 
+ 
+ COBRA is a constraint-based semi-supervised clustering method. It first use k-means algorithm to split instances into several super instances. Each super instance contains serveral instances. Later, it exploits expert knowledge by asking users most informative quries and add contraints on super instances. These contraints include must-link, meaning two super instances should be clustered together, and cannot-link, meaning two super instances should not be in the same cluster. It is a bottom-up clustering. 
+\subsection{COBRAS[detail]}
+ There is one defect of COBRA. Once the super instance is formed, it will never change. COBRAS gives chance to super instance to split again later so that it can form clusters of better granuity.
+\subsection{COBRAS-TS[detail]}
+COBRAS-TS is the time series version of COBRAS. 
 \subsection{others}
 \subsection{reason of choice}
 

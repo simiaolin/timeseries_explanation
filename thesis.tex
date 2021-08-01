@@ -20,7 +20,10 @@
 % Finally the hyperref package is used for pdf files.
 % This can be commented out for printed versions.
 \usepackage[pdfusetitle,colorlinks,plainpages=false]{hyperref}
-
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{multirow}
+\usepackage{amsmath} 
 %%%%%%%
 % The lipsum package is used to generate random text.
 % You never need this in a real master's thesis text!
@@ -73,6 +76,8 @@ An important aspect of applying machine learning models to real-world use cases 
 DTW       & Dynamic Time Warping     \\ 
 
 DBA       & DTW Barycenter Averaging \\    
+COBRA    & Constraint-based Repeated Aggregation \\
+COBRAS     & Constraint-based Repeated Aggregation and Splitting \\
   \end{tabularx}
 \end{flushleft}
 \section*{Symbols}
@@ -91,13 +96,11 @@ DBA       & DTW Barycenter Averaging \\
 % Now comes the main text
 \mainmatter
 
-\include{intro}
+\include{intro} 
 \include{background_and_relatedwork}
 \include{problem_definition}
 \include{properties_of_a_cluster}
-\include{comparison_between_clusters}
 \include{cluster_membership}
-\include{pros_and_cons}
 
 \include{conclusion}
 
