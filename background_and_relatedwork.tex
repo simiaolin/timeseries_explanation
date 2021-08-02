@@ -165,7 +165,19 @@ The clustering result of COBRA and COBRAS are compared in \fref{fig:result_cobra
 
 
 \subsection{$ \mathrm{COBRAS^{TS}} $}
-COBRAS-TS is the time series version of COBRAS. 
+Clustering on time series data is more subjective. There are several elements in time series data which are important, such as time scale, amplitude scale, number of peaks, etc. Different users might focus differently on those elements. Besides, some users might pay more attention to the monotonic behaviour of the time series data, while other users might pay more attention to the periodic behaviour of the time series data. Sometimes users might be interested in whether there are specific patterns in the time series data. Thus, using semi-supervised learning to exploit users' expert knowledge is very important in time series clustering.
+
+I had discussed COBRAS's ability to obtain perfect clustering efficiently as a semi-supervised clustering method. However, when it comes to time series data, things are not that simple. COBRAS is not inherently suitable for time series data mainly for two reasons. The first one is that COBRAS uses Euclidean distance, which is not the start-of-art distance measure for time series data. The second one is that COBRAS uses K-means algorithm to split super-instances, which is again not that suitable for time series data. The good thing is that we can still make good use of COBRAS by keeping its main idea and injecting distance measure and clustering method that are suitable for time series data. It is how $ \mathrm{COBRAS^{DTW}} $ is introduced. As shown in \ref{algo:cobrasts} $ \mathrm{COBRAS^{DTW}} $ replaces the Euclidean distance with the DTW(Dynamic timeseries wrapping) mentioned above, and uses spectral clustering to split super-instances. As it is COBRAS specifically for time series data, we also refer it $ \mathrm{COBRAS^{TS}} $.
+
+\begin{algorithm}[h] \label{algo:cobrasts}
+	\caption{$ \mathrm{COBRAS^{TS}} $}
+	\begin{algorithmic}[1]
+		
+		\STATE Compute the full pairwise DTW distance matrix
+		\STATE to be completed
+	\end{algorithmic}
+\end{algorithm}
+
 \subsection{others}
 \subsection{motivation of selecting COBRAS}
 
