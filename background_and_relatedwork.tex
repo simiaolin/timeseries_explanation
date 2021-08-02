@@ -86,11 +86,9 @@ In unsupervised learning, no data is labeled, and algorithms are expected to fin
 
 Clustering is subjective in nature. Different users might expect different clustering results given same dataset. In Semi-supervised learning, a small part of data are labeled and most of the data are unlabeled.  Little effort on collecting expert knowledge can contribute greatly to the clustering result. These small part of labeled data not only shape the result of clustering, but also accelerate the process of clustering. 
 \subsection{COBRA}
-COBRA is a constraint-based semi-supervised clustering method. 
+COBRA is a constraint-based semi-supervised clustering method. Contraint-based clustering does not ask the users the labels of the instances directly. Instead, it queries the relation between instance pairs and adds contraints on the instances. There are two types of constraints, must-link and cannot-link. A must-link means that two instances should be in the same cluster, while a cannot-link means that two instances should be in different clusters. Apparently, the target should be asking users as few queries as possible to get a clustering close to the expected one.  
 
-Contraint-based clustering does not ask the users the labels of the instances directly. Instead, it queries the relation between instance pairs and adds contraints on the instances. There are two types of constraints, must-link and cannot-link. A must-link means that two instances should be in the same cluster, while a cannot-link means that two instances should be in different clusters. Apparently, the target should be asking users as few queries as possible to get a clustering close to the expected one.  
-
-Suppose we have $  N$ instances, to get the relation between all the instance pairs we need $N*(N-1)/2$quries, so the query number increases exponentionally as the instance number grows. We can reduce the query number by introduing \textit{constraint entailment and transitivity}.  Must-link constraints are transitive:
+Suppose we have $  N$ instances, to get the relation between all the instance pairs we need $N*(N-1)/2$ quries, so the query number increases exponentionally as the instance number grows. We can reduce the query number by introduing \textit{constraint entailment and transitivity}.  Must-link constraints are transitive:
 
 \begin{center}$must-link(A, B) \wedge must-link(B, C) \Rightarrow must-link(A, C)$\end{center}
 
@@ -106,19 +104,14 @@ All of the above clustering methods produce very good clustering. Still, they ne
 
 
 \begin{algorithm}[h] \label{algo:cobra}
-	\caption{DTW (s: array[0...n], t: array[0...m])}
+	\caption{COBRA}
 	\begin{algorithmic}[1]
-		\STATE DTW := array[0..n, 0..m]
-		\FOR {i := 0 to n}
-		\FOR {j := 0 to m}
-		\STATE DTW[i, j] := d(s[i], t[j])
-		\ENDFOR
-		\ENDFOR			
 		
+		\STATE to be completed
 	\end{algorithmic}
 \end{algorithm}
 
-As shown in \fref{fig:contrain-based-level}, we are going to cluster on five dots, A, B, C, D and E. The target clustering is that blue dots A, B and C are in the same cluster, while orange dots D and E are in the same cluster. The lines between instances indicate their relation. Green ones are must-links, while the red ones are cannot-links. The solid lines are the contraints that are needed to queried to get the overall relation. In  \fref{fig:contrain-based-level}a, relations of all instance pairs are queried, so 10 queries are needed. In \fref{fig:contrain-based-level}b, by using constraint transitivity and entailment, the query number is reduced to 6. In \fref{fig:contrain-based-level}c, by further querying the closest pair of instance first, the query number is further decreased to 4. In \fref{fig:contrain-based-level}d, COBRA beats the former three by introducing super-instances and the query number is only 2. We can see that COBRA can substantially reduce the number of queries, which makes it query-efficient. Besides, there is no need to decide the number of clusters beforehand. However, we need to initialize it with the number of super-instances at the very beginning, and this number has an unignorable effect on the result of the clustering. Moreover, COBRA might not obtain perfect result when instances inside a super-instance actually should not be together.  I will explain it in more details in \ref{sec:COBRAS}. 
+As shown in \fref{fig:contrain-based-level}, we are going to cluster on five dots, A, B, C, D and E. The target clustering is that blue dots A, B and C are in the same cluster, while orange dots D and E are in the same cluster. The lines between instances indicate their relation. Green ones are must-links, while the red ones are cannot-links. The solid lines are the contraints that are needed to queried to get the overall relation. In  \fref{fig:contrain-based-level}a, relations of all instance pairs are queried, so 10 queries are needed. In \fref{fig:contrain-based-level}b, by using constraint transitivity and entailment, the query number is reduced to 6. In \fref{fig:contrain-based-level}c, by further querying the closest pair of instance first, the query number is further decreased to 4. In \fref{fig:contrain-based-level}d, COBRA beats the former three by introducing super-instances and the query number is only 2. We can see that COBRA can substantially reduce the number of queries, which makes it query-efficient. Besides, there is no need to decide the number of clusters beforehand. However, we need to initialize it with the number of super-instances at the very beginning, and this number has an unignorable effect on the result of the clustering. Moreover, COBRA might not obtain perfect result when instances inside a super-instance actually should not be together. I will explain it in more details in \ref{sec:COBRAS}.  
 
  \begin{figure}
  		\centering
@@ -128,13 +121,47 @@ As shown in \fref{fig:contrain-based-level}, we are going to cluster on five dot
 
  \end{figure}
 
-\subsection{COBRAS[detail]} \label{sec:COBRAS}
- There is one defect of COBRA. Once the super instance is formed, it will never change. COBRAS gives chance to super instance to split again later so that it can form clusters of better granuity.
-\subsection{COBRAS-TS[detail]}
+\subsection{COBRAS} \label{sec:COBRAS}
+Although COBRA can greatly reduce the query number and increase the speed of getting clustering result, there is one obvious defect of COBRA. Once a super-instance is formed, it can only be merged into bigger super-instance, and can never be splitted again. As users, we are asked to provide COBRA with the number of original super-instances so that COBRA can use it in K-means algorithm to split the data at the very beginning. If we fail to designate a good super-instance number, unexpected results might occur. For instance, if we set the original super-instance number to a number that is too small, we might get underclustering, where instances that are not supposed to be in the same group are clustered together. On the contrary, if we set the original super-instance number to a number that is too big, we might get overclustering, where instances that are supposed to be in the same group are splitted away. As a result, getting a clustering of perfect granuity is not always the case in COBRA.
+
+COBRAS is designed to automatically form clusters of better granuity. It refines COBRA by giving chance to split super-instances after it is formed. A main difference between COBRAS and COBRA is that in COBRAS , even if instances that are not expected to be in the same cluster are merged together in some phase, there still exists the chance for them to separate later. In other words, in COBRA there are only merging, but in COBRAS merging and splitting happen alternately,, until the query budget is used up. Another important difference betwen COBRAS and COBRA is that in COBRAS there is no such need to set up an initial super-instance number, as COBRAS can decide it by itself. The COBRAS algorithm is explained in more details in \ref{sec:COBRAS}.
+
+\begin{algorithm}[h] \label{algo:cobras}
+	\caption{COBRAS}
+	\begin{algorithmic}[1]
+		
+		\STATE to be completed
+	\end{algorithmic}
+\end{algorithm}
+
+
+The learning curve of COBRA and COBRAS are compared in \fref{fig:learning_curve_cobras}. For COBRA, when the number of super-instances is small, as shown in the orange curve, the clustering quality increases quickly at first but can only reach a suboptimal level. When the number of super-instances is big, as shown in the red curve, relatively good clustering result is obtained in the end but it takes more queries to get this result. For COBRAS, as shown in the dotted blue curve, not only optimal clustering result is obtained in the end, but also the clustering performance is already high within fewer queries. 
+
+The clustering result of COBRA and COBRAS are compared in \fref{fig:result_cobras}. From left to right, results of CORBA with 10 initial super-instances, COBRA with 100 initial super-instances, COBRAS are shown. Dots having the same color are clustered into the same group. The difference between images on the upper layer and the lower layer is the query number that is used. We can see that both COBRA with 100 initial super-instances and CORBAS can obtain perfect result in the end. However, COBRAS is more query-efficient as it obtain this result within 36 queries, while COBRA with 100 initial super-instances needs 103 queries. For COBRA with 10 initial super-instances, it stucks after 14 queries and ends in a suboptimal clustering. As we can see in the red circle, the yellow cluster has included a small part which is expected to be in the brown cluster, which is the phenomenon of underclustering. In all, COBRAS beats COBRA for its ability to converge to high-quality clustering in shorter time with fewer queries.  
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.5\textwidth]{pics/related_work/learning_curve_cobras}
+	\caption{learning curves of COBRA and COBRAS}
+	\label{fig:learning_curve_cobras}
+\end{figure}
+
+
+
+\begin{figure}
+	\centering
+	\includegraphics[width=1\textwidth]{pics/related_work/result_cobras}
+	\caption{learning curves of COBRA and COBRAS}
+	\label{fig:result_cobras}
+\end{figure}
+
+
+
+
+\subsection{$  COBRAS^{TS}$ }
 COBRAS-TS is the time series version of COBRAS. 
 \subsection{others}
-\subsection{reason of choice}
-
+\subsection{motivation of selecting COBRAS}
 
 
 %%% Local Variables: 

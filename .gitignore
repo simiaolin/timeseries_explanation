@@ -3,3 +3,4 @@
 .gitignore
 /thesis.*
 !thesis.tex
+.idea/
