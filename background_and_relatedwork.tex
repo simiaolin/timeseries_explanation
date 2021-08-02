@@ -102,18 +102,33 @@ Suppose we have $  N$ instances, to get the relation between all the instance pa
 
 The order the constraints are obtained is important. You can not do contraint expansion if you have two cannot-links, as both transitivity rule and entailment rule can not be used in this case. However, as long as one of the constraint is must-link, contraint expansion is possible. As a result, it would be better if we could get must-links earlier. In other words, users should be queried the most similar pair of instances.
 
-All of the above clustering methods produce very good clustering. Still, they need a large number of queries to reach perfect result. We need a better algorithm to decrease the query number, especially for clustering on large datasets.
- \begin{figure}[htbp]
+All of the above clustering methods produce very good clustering. Still, they need a large number of queries to reach perfect result. We need a better algorithm to decrease the query number, especially for clustering on large datasets. COBRA is designed for this purpose. COBRA introduces \textit{super-instance}, which is a small group of similar instances. COBRA get super-instances using K-means algorithm, and later only cluster on the representatives of the super-instance. The representative of a super-instance could be its medoid. Like mentioned above, when querying the constraints between pairs of representatives, the closest one is chosen to query first to obtain must-link as early as possible. COBRA keeps querying users and attempting to merge the super-instances until all the links for pairs of representatives in the cluster are cannot-links, which means no super-instances could be merged further. The COBRA algorithm is shown in detail in \ref{algo:cobra}. 
+
+
+\begin{algorithm}[h] \label{algo:cobra}
+	\caption{DTW (s: array[0...n], t: array[0...m])}
+	\begin{algorithmic}[1]
+		\STATE DTW := array[0..n, 0..m]
+		\FOR {i := 0 to n}
+		\FOR {j := 0 to m}
+		\STATE DTW[i, j] := d(s[i], t[j])
+		\ENDFOR
+		\ENDFOR			
+		
+	\end{algorithmic}
+\end{algorithm}
+
+As shown in \fref{fig:contrain-based-level}, we are going to cluster on five dots, A, B, C, D and E. The target clustering is that blue dots A, B and C are in the same cluster, while orange dots D and E are in the same cluster. The lines between instances indicate their relation. Green ones are must-links, while the red ones are cannot-links. The solid lines are the contraints that are needed to queried to get the overall relation. In  \fref{fig:contrain-based-level}a, relations of all instance pairs are queried, so 10 queries are needed. In \fref{fig:contrain-based-level}b, by using constraint transitivity and entailment, the query number is reduced to 6. In \fref{fig:contrain-based-level}c, by further querying the closest pair of instance first, the query number is further decreased to 4. In \fref{fig:contrain-based-level}d, COBRA beats the former three by introducing super-instances and the query number is only 2. We can see that COBRA can substantially reduce the number of queries, which makes it query-efficient. Besides, there is no need to decide the number of clusters beforehand. However, we need to initialize it with the number of super-instances at the very beginning, and this number has an unignorable effect on the result of the clustering. Moreover, COBRA might not obtain perfect result when instances inside a super-instance actually should not be together.  I will explain it in more details in \ref{sec:COBRAS}. 
+
+ \begin{figure}
  		\centering
- 		\includegraphics[width=6cm]{pics/related_work/cobra1}
+ 		\includegraphics[width=1\textwidth]{pics/related_work/cobra1}
  		\caption{different levels of contraint-based semi-supervised clustering}
  		\label{fig:contrain-based-level}
 
  \end{figure}
 
- It first use k-means algorithm to split instances into several super instances. Each super instance contains serveral instances. Later, it exploits expert knowledge by asking users most informative quries and add contraints on super instances. These contraints include must-link, meaning two super instances should be clustered together, and cannot-link, meaning two super instances should not be in the same cluster. It is a bottom-up clustering. 
- 
-\subsection{COBRAS[detail]}
+\subsection{COBRAS[detail]} \label{sec:COBRAS}
  There is one defect of COBRA. Once the super instance is formed, it will never change. COBRAS gives chance to super instance to split again later so that it can form clusters of better granuity.
 \subsection{COBRAS-TS[detail]}
 COBRAS-TS is the time series version of COBRAS. 
