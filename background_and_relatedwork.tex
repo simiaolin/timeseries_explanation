@@ -124,8 +124,9 @@ As shown in \fref{fig:contrain-based-level}, we are going to cluster on five dot
 \subsection{COBRAS} \label{sec:COBRAS}
 Although COBRA can greatly reduce the query number and increase the speed of getting clustering result, there is one obvious defect of COBRA. Once a super-instance is formed, it can only be merged into bigger super-instance, and can never be splitted again. As users, we are asked to provide COBRA with the number of original super-instances so that COBRA can use it in K-means algorithm to split the data at the very beginning. If we fail to designate a good super-instance number, unexpected results might occur. For instance, if we set the original super-instance number to a number that is too small, we might get underclustering, where instances that are not supposed to be in the same group are clustered together. On the contrary, if we set the original super-instance number to a number that is too big, we might get overclustering, where instances that are supposed to be in the same group are splitted away. As a result, getting a clustering of perfect granuity is not always the case in COBRA.
 
-COBRAS is designed to automatically form clusters of better granuity. It refines COBRA by giving chance to split super-instances after it is formed. A main difference between COBRAS and COBRA is that in COBRAS , even if instances that are not expected to be in the same cluster are merged together in some phase, there still exists the chance for them to separate later. In other words, in COBRA there are only merging, but in COBRAS merging and splitting happen alternately,, until the query budget is used up. Another important difference betwen COBRAS and COBRA is that in COBRAS there is no such need to set up an initial super-instance number, as COBRAS can decide it by itself. The COBRAS algorithm is explained in more details in \ref{sec:COBRAS}.
+COBRAS is designed to automatically form clusters of better granuity. It refines COBRA by giving chance to split super-instances after it is formed. A main difference between COBRAS and COBRA is that in COBRAS , even if instances that are not expected to be in the same cluster are merged together in some phase, there still exists the chance for them to separate later. In other words, in COBRA there are only merging, but in COBRAS merging and splitting happen alternately, until the query budget is used up. Another important difference betwen COBRAS and COBRA is that in COBRAS there is no such need to set up an initial super-instance number, as COBRAS can decide it by itself. The COBRAS algorithm is explained in more details in \ref{sec:COBRAS}.
 
+A COBRAS procedure is elaborated in \fref{fig:cobras_procedure}. At the very beginning, in subgraph A there is only one super-instance $ \mathrm{S_0} $ containing all the instances, and there is one cluster $ \mathrm{C_0} $ containing super-instance $ \mathrm{S_0} $.  At the first iteration, in subgraph B COBRAS first splits the biggest super-instance, which is $ \mathrm{S_0} $, into four small super-instances, $ \mathrm{S_1} $, $ \mathrm{S_2} $, $ \mathrm{S_3} $ and $ \mathrm{S_4} $, respectively. New clusters are formed with these new super-instances, which are  $ \mathrm{C_1} $,  $ \mathrm{C_2} $,  $ \mathrm{C_3} $ and  $ \mathrm{C_4} $, correspondly. Later in subgraph C a merging procedure is executed on these clusters just like in COBRA. At the second iteration, same things happen again. In subgraph D COBRAS first splits the biggest super-instance, which is now $ \mathrm{S_2} $, into two super-instances, $ \mathrm{S_5} $ and $ \mathrm{S_6} $ and forms new clusters $ \mathrm{C_7} $ and $ \mathrm{C_8} $. Later in subgraph E the merging happens based on the constraints and now $ \mathrm{C_5} $ and $ \mathrm{C_7} $ are grouped while $ \mathrm{C_6} $ and $ \mathrm{C_8} $ are grouped. Super-instance $ \mathrm{S_5} $ and $ \mathrm{S_6} $ are in the same cluster but later they are refined and splitted into different clusters, which illustrates COBRAS' ability to finetune the granuity of the clusters.
 \begin{algorithm}[h] \label{algo:cobras}
 	\caption{COBRAS}
 	\begin{algorithmic}[1]
@@ -133,6 +134,14 @@ COBRAS is designed to automatically form clusters of better granuity. It refines
 		\STATE to be completed
 	\end{algorithmic}
 \end{algorithm}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=1\textwidth]{pics/related_work/cobras_procedure}
+	\caption{an illustration of COBRAS procedure}
+	\label{fig:cobras_procedure}
+\end{figure}
+
 
 
 The learning curve of COBRA and COBRAS are compared in \fref{fig:learning_curve_cobras}. For COBRA, when the number of super-instances is small, as shown in the orange curve, the clustering quality increases quickly at first but can only reach a suboptimal level. When the number of super-instances is big, as shown in the red curve, relatively good clustering result is obtained in the end but it takes more queries to get this result. For COBRAS, as shown in the dotted blue curve, not only optimal clustering result is obtained in the end, but also the clustering performance is already high within fewer queries. 
@@ -147,18 +156,15 @@ The clustering result of COBRA and COBRAS are compared in \fref{fig:result_cobra
 \end{figure}
 
 
-
 \begin{figure}
 	\centering
 	\includegraphics[width=1\textwidth]{pics/related_work/result_cobras}
-	\caption{learning curves of COBRA and COBRAS}
+	\caption{clustering results of COBRA and COBRAS}
 	\label{fig:result_cobras}
 \end{figure}
 
 
-
-
-\subsection{$  COBRAS^{TS}$ }
+\subsection{$ \mathrm{COBRAS^{TS}} $}
 COBRAS-TS is the time series version of COBRAS. 
 \subsection{others}
 \subsection{motivation of selecting COBRAS}
