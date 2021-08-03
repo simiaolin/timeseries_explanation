@@ -2,12 +2,39 @@
 \chapter{Background and related work}
 \label{cha:related_work}
 Before all, time series related terminologies are introduced in more details.
-These include distance measurement methods, averaging methods and semi supervised clustering methods in perspective of time series. Apart from the basic ones, I also introduce the variant ones.
+These include distance measurement methods, averaging methods and semi-supervised clustering methods in perspective of time series. Apart from the basic ones, I also introduce the variant ones.
 
 \section{Dissimilarity measurement }
-Euclidean distance is commonly used in measuring distances between two points, two vectors, etc. It is simple and competitive for many senarios. However, it is not the best choice in some domains, such as time series. Two time series might be sensitive to time axis, even thought they share similar shapes they might not match well in Euclidean distance. A new way of calculating distance between time series is thus proposed, which is DTW(Dynamic Time Wrapping)
+Euclidean distance is commonly used in measuring distances between two points, two vectors, etc. It is simple and competitive for many senarios. However, it is not the best choice in some domains, such as time series. Time series data are sensitive to time axis. Even though they share similar shapes they might not match well in Euclidean distance because their shifts or speed might not sychronize. A new way of measuring distance between time series that can capture their similarities is thus proposed, which is DTW(Dynamic Time Wrapping)
 \subsection{DTW}
-Dynamic time warping (DTW) is a well-known method to measure the distance between time series instances. Unlike Euclidean distance, which is the sum of the distance of instances in each time axis, as shown in \ref{algo:dtw}, DTW finds an optimal alignment between two time series. Intuitively, it uses dynamic programming to map two time series in a way that their peaks and their bottoms are mapped together. In other words, DTW maps their trends instead of their time axis.
+Dynamic time warping(DTW) is a well-known method to measure the distance between time series instances. \cref{fig:dtw_0}, \cref{fig:dtw_1} and \cref{fig:dtw_2} together give an intuitive illustration of the difference between Euclidean distance and DTW. \cref{fig:dtw_0} shows two time series, A and B, respectively. We are interested in their similarity. \cref{fig:dtw_1} illustrates how points in A and B are mapped to each other in Euclidean distance. We can see that the point of index $ i $ in A is mapped to point of index $ i $ in B. Unlike Euclidean distance, \cref{fig:dtw_2} shows that in DTW, there is no such necessity that point of index $ i $ in A is mapped to point of index $ i $ in B. Actually in this case point of index $i  $ in A is mapped to point of index $ i+2 $ in B. DTW is designed in such way to find optimal alignment between two time series. More details about DTW algorithm is shown in \cref{algo:dtw}. Intuitively, it uses dynamic programming to map two time series in a way that their peaks and their bottoms are mapped together. In other words, DTW maps their trends instead of their time axis.
+
+
+\begin{figure}[!htb]
+	\centering
+	\begin{minipage}[t]{0.32\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{pics/related_work/dtw_0}
+		\caption{Two time series}
+		\label{fig:dtw_0}
+	\end{minipage}
+
+\begin{minipage}[t]{0.32\textwidth}
+	\centering
+	\includegraphics[width=\linewidth]{pics/related_work/dtw_1}
+	\caption{Euclidean distance}
+	\label{fig:dtw_1}
+\end{minipage}
+
+\begin{minipage}[t]{0.32\textwidth}
+	\centering
+	\includegraphics[width=\linewidth]{pics/related_work/dtw_2}
+	\caption{DTW(Dynamic time series wrapping)}
+	\label{fig:dtw_2}
+\end{minipage}
+	
+\end{figure}
+
 
 \begin{algorithm}[h] \label{algo:dtw}
 	\caption{DTW (s: array[0...n], t: array[0...m])}
@@ -38,16 +65,7 @@ Dynamic time warping (DTW) is a well-known method to measure the distance betwee
 	\end{algorithmic}
 \end{algorithm}
 
-\begin{figure}[htbp]
-	\centering
-	\begin{minipage}[t]{0.48\textwidth}
-		\centering
-		\includegraphics[width=6cm]{pics/related_work/dtw}
-		\caption{DTW}
-		\label{fig:dtw}
-	\end{minipage}
 
-\end{figure}
 \subsection{others (eg. soft, k-shape, in brief)}
 \subsection{motivation for selecting DTW}
 DTW not only captures amplitude information of time series and computes their distance based on it, but also records how two time series are mapped to each other in the process of wrapping. In other words, the wrapping can be seen as evidence why two time series are similar to each other, or vise versa. DTW itself has good explanation ability.
@@ -65,13 +83,13 @@ As we can see from \fref{fig:arithmetic} and \fref{fig:dba}, DBA can capture the
 	\centering
 	\begin{minipage}[t]{0.48\textwidth}
 		\centering
-		\includegraphics[width=6cm]{pics/related_work/arithmetic_mean}
+		\includegraphics[width=\linewidth]{pics/related_work/arithmetic_mean}
 		\caption{Arithmetic mean}
 		\label{fig:arithmetic}
 	\end{minipage}
 	\begin{minipage}[t]{0.48\textwidth}
 		\centering
-		\includegraphics[width=6cm]{pics/related_work/DBA}
+		\includegraphics[width=\linewidth]{pics/related_work/DBA}
 		\caption{DBA}
 		\label{fig:dba}
 	\end{minipage}
