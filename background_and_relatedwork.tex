@@ -1,52 +1,58 @@
 
 \chapter{Background and related work}
 \label{cha:related_work}
-Before all, time series related terminologies are introduced in more details.
+Before all, time series related terminology is introduced in more details.
 These include distance measurement methods, averaging methods and semi-supervised clustering methods in perspective of time series. Apart from the basic ones, I also introduce the variant ones.
 
-\section{Dissimilarity measurement }
-Euclidean distance is commonly used in measuring distances between two points, two vectors, etc. It is simple and competitive for many senarios. However, it is not the best choice in some domains, such as time series. Time series data are sensitive to time axis. Even though they share similar shapes they might not match well in Euclidean distance because their shifts or speed might not sychronize. A new way of measuring distance between time series that can capture their similarities is thus proposed, which is DTW(Dynamic Time Wrapping)
+\section{Dissimilarity measurement for time series}
+Euclidean distance is commonly used in measuring distances between two points, two vectors, etc. It is simple and competitive for many senarios. However, it is not the best choice in some domains, such as time series. Time series data are sensitive to time axis. Even though they share similar shapes they might not match well in Euclidean distance because their shifts or speed might not sychronize. A better way of measuring distance between time series that can capture their similarities is Dynamic Time Wrapping (DTW).
 \subsection{DTW}
-Dynamic time warping(DTW) is a well-known method to measure the distance between time series instances. \cref{fig:dtw_0}, \cref{fig:dtw_1} and \cref{fig:dtw_2} together give an intuitive illustration of the difference between Euclidean distance and DTW. \cref{fig:dtw_0} shows two time series, A and B, respectively. We are interested in their similarity. \cref{fig:dtw_1} illustrates how points in A and B are mapped to each other in Euclidean distance. We can see that the point of index $ i $ in A is mapped to point of index $ i $ in B. Unlike Euclidean distance, \cref{fig:dtw_2} shows that in DTW, there is no such necessity that point of index $ i $ in A is mapped to point of index $ i $ in B. Actually in this case point of index $i  $ in A is mapped to point of index $ i+2 $ in B. DTW is designed in such way to find optimal alignment between two time series. More details about DTW algorithm is shown in \cref{algo:dtw}. Intuitively, it uses dynamic programming to map two time series in a way that their peaks and their bottoms are mapped together. In other words, DTW maps their trends instead of their time axis.
+Dynamic time warping (DTW) is a well-known method to measure the distance between time series instances (could be also called sequences). \cref{fig:dtw_vs_normal} gives an intuitive illustration of the difference between Euclidean distance and DTW.  \cref{fig:dtw_vs_normal} (a) shows two time series, A and B, respectively. We are interested in their similarity.  \cref{fig:dtw_vs_normal} (b) illustrates how points in A and B are mapped to each other in Euclidean distance. We can see that the point of index $ i $ in A is mapped to point of index $ i $ in B. Unlike Euclidean distance,  \cref{fig:dtw_vs_normal} (c) shows that in DTW, there is no such necessity that point of index $ i $ in A is mapped to point of index $ i $ in B. Actually in this case point of index $i  $ in A is mapped to point of index $ i+2 $ in B. DTW is designed in such way to find optimal alignment between two time series. Intuitively, it uses dynamic programming to map two time series in a way that similar values, e.g. peaks and troughs are mapped together. 
 
 
 \begin{figure}[!htb]
 	\centering
-	\begin{minipage}[t]{0.32\textwidth}
+	\begin{minipage}[t]{\textwidth}
 		\centering
-		\includegraphics[width=\linewidth]{pics/related_work/dtw_0}
+		\includegraphics[width=\linewidth]{pics/related_work/dtw_vs_normal}
 		\caption{Two time series}
-		\label{fig:dtw_0}
+		\label{fig:dtw_vs_normal}
 	\end{minipage}
-
-\begin{minipage}[t]{0.32\textwidth}
-	\centering
-	\includegraphics[width=\linewidth]{pics/related_work/dtw_1}
-	\caption{Euclidean distance}
-	\label{fig:dtw_1}
-\end{minipage}
-
-\begin{minipage}[t]{0.32\textwidth}
-	\centering
-	\includegraphics[width=\linewidth]{pics/related_work/dtw_2}
-	\caption{DTW(Dynamic time series wrapping)}
-	\label{fig:dtw_2}
-\end{minipage}
 	
+\end{figure}
+ 
+Before diving into the details of DTW algorithm, I would like to first introduce some premises of DTW. 
+\begin{itemize}
+	\item Every index from one time series should be matched with one or more indices from the other time series.
+	\item The first index from the first time series should be matched with the first index of the second time series. The same rule holds for the last index from the first time series and the last index from the second time series
+	\item The mapping of indices from one time series to the other time series should be monotonically increasing. For example, if $ i < j $ are indices from one time series, and $ k < l $ are indices from the other time series, there is no such mapping like index $ i $ is mapped to index $ l $ and index $ j $ is mapped to index $ k $.
+\end{itemize}
+
+DTW finds the best alignment between two time series while satisfying these preconditions by solving a dynamic programming problem. Suppose there are two sequences, sequence $ S $ of length $ n $ and sequence $ T$ of length $ m $. DTW maintains a two-dimension distance matrix of size $ n * m $, where element with index $ i, j $ records the accumulated distance of the best alignment between subsequence of $ S $ with indices from $ 0 $ to $ i $ and subsequence of $ T $ with indices from $ 0 $ to $ j $. In \cref{fig:dtw_w_all}, we are interested in the accumulated distance between index $ i $ in first sequence and index $ j $ in the second sequence.  At this moment index i is mapped to index j, which in shown in blue line. To meet with the preconditions of DTW mentioned above, there are three possibilities on the choice of the former alignment, index $ i-1 $ mapped to index $ j $, index $ i $ mapped to index $ j-1 $ and index $ i-1 $ mapped to index $ j-1 $, which are shown in red lines. The alignment of the three has the smallest accumulated distance will be chosen. Let's look into the DTW algorithm. From line 2 to 6, it initializes the matrix with the distance of index pairs in two sequences. From line 13 to 17, it modifies each element of the matrix by adding the smallest accumulated distance of the three possible former alignments.
+
+\begin{figure}[!htb]
+	\centering
+	\begin{minipage}[t]{\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{pics/related_work/dtw_w_all}
+		\caption{Mapping in DTW}
+		\label{fig:dtw_w_all}
+	\end{minipage}
 \end{figure}
 
 
+
 \begin{algorithm}[h] \label{algo:dtw}
-	\caption{DTW (s: array[0...n], t: array[0...m])}
+	\caption{DTW (S: array[0...n], T: array[0...m])}
 	\begin{algorithmic}[1]
 		\STATE DTW := array[0..n, 0..m]
 		\FOR {i := 0 to n}
 		\FOR {j := 0 to m}
-			\STATE DTW[i, j] := d(s[i], t[j])
+		\STATE DTW[i, j] := d(S[i], T[j])
 		\ENDFOR
 		\ENDFOR
 		\FOR { i := 1 to n}
-		 \STATE DTW[i, 0] += DTW[i-1, 0]
+		\STATE DTW[i, 0] += DTW[i-1, 0]
 		\ENDFOR
 		
 		\FOR { j := 1 to n}
@@ -56,14 +62,29 @@ Dynamic time warping(DTW) is a well-known method to measure the distance between
 		\FOR { i := 1 to n}
 		\FOR {j := 1 to m}	
 		\STATE DTW[i, j] += min(DTW[i-1, j],									
-							DTW[i, j-1],
-							DTW[i-1, j-1])
+		DTW[i, j-1],
+		DTW[i-1, j-1])
 		\ENDFOR	
 		\ENDFOR
-	   \STATE return DTW[n-1, m-1]						
+		\STATE return DTW[n-1, m-1]						
 		
 	\end{algorithmic}
 \end{algorithm}
+
+
+I will illustrate DTW with a specific example. In \cref{fig:dtw_ex_1} (a) we are interested in the distance of two time series P adn Q. In this case we use Manhattan distance as the base distance. Intuitively they are similar in shapes, but their similarity does not match well in time axis. Let's see how DTW does the warping magic to match their similarity and compute a small distance between them. In \cref{fig:dtw_ex_1} (b), when we look at the $ 7th $ index of sequence P (with a value of 6) and the $ 3th $ index of sequence Q (with a value of 4), we can see that the original Manhattan distance between them is $ |6 - 4| $, which is 2. To get the smallest accumulated distance for them, we first look at the accumulated distance of the three possible alignment before them. The accumulated distance of the $ 6th $ index of P and the $ 2th $ index of Q is 23. The accumulated distance of the $ 6th $ index of P and the $ 3th $ index of Q is 14. The accumulated distance of the $ 7th $ index of P and the $ 2th $ index of Q is 28. Obviously, the smallest of the three is 14, so the accumulated distance of the $ 7th $ index of P and the $ 3th $ index of Q is $ 14+2=16$, which is circled in blue. Finally, we can see that the distance between P and Q is 0 if computed by DTW, which indicates the high similarity between P and Q. Besides, we can easily backtrack from the end of the matrix by choosing the smallest accumulated distance step by step. In this way we can visualize how P is warped to Q in the whole DTW process.
+
+
+\begin{figure}[htbp]
+	\centering
+		\begin{minipage}[t]{\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{pics/related_work/dtw_ex_1}
+		\caption{Euclidean distance}
+		\label{fig:dtw_ex_1}
+	\end{minipage}
+\end{figure}
+
 
 
 \subsection{others (eg. soft, k-shape, in brief)}
@@ -142,16 +163,16 @@ As shown in \fref{fig:contrain-based-level}, we are going to cluster on five dot
 \subsection{COBRAS} \label{sec:COBRAS}
 Although COBRA can greatly reduce the query number and increase the speed of getting clustering result, there is one obvious defect of COBRA. Once a super-instance is formed, it can only be merged into bigger super-instance, and can never be splitted again. As users, we are asked to provide COBRA with the number of original super-instances so that COBRA can use it in K-means algorithm to split the data at the very beginning. If we fail to designate a good super-instance number, unexpected results might occur. For instance, if we set the original super-instance number to a number that is too small, we might get underclustering, where instances that are not supposed to be in the same group are clustered together. On the contrary, if we set the original super-instance number to a number that is too big, we might get overclustering, where instances that are supposed to be in the same group are splitted away. As a result, getting a clustering of perfect granuity is not always the case in COBRA.
 
-COBRAS is designed to automatically form clusters of better granuity. It refines COBRA by giving chance to split super-instances after it is formed. A main difference between COBRAS and COBRA is that in COBRAS , even if instances that are not expected to be in the same cluster are merged together in some phase, there still exists the chance for them to separate later. In other words, in COBRA there are only merging, but in COBRAS merging and splitting happen alternately, until the query budget is used up. Another important difference betwen COBRAS and COBRA is that in COBRAS there is no such need to set up an initial super-instance number, as COBRAS can decide it by itself. The COBRAS algorithm is explained in more details in \ref{sec:COBRAS}.
+COBRAS is designed to automatically form clusters of better granuity. It refines COBRA by giving chance to split super-instances after it is formed. A main difference between COBRAS and COBRA is that in COBRAS , even if instances that are not expected to be in the same cluster are merged together in some phase, there still exists the chance for them to separate later. In other words, in COBRA there are only merging, but in COBRAS merging and splitting happen alternately, until the query budget is used up. Another important difference betwen COBRAS and COBRA is that in COBRAS there is no such need to set up an initial super-instance number, as COBRAS can decide it by itself. 
 
-A COBRAS procedure is elaborated in \fref{fig:cobras_procedure}. At the very beginning, in subgraph A there is only one super-instance $ \mathrm{S_0} $ containing all the instances, and there is one cluster $ \mathrm{C_0} $ containing super-instance $ \mathrm{S_0} $.  At the first iteration, in subgraph B COBRAS first splits the biggest super-instance, which is $ \mathrm{S_0} $, into four small super-instances, $ \mathrm{S_1} $, $ \mathrm{S_2} $, $ \mathrm{S_3} $ and $ \mathrm{S_4} $, respectively. New clusters are formed with these new super-instances, which are  $ \mathrm{C_1} $,  $ \mathrm{C_2} $,  $ \mathrm{C_3} $ and  $ \mathrm{C_4} $, correspondly. Later in subgraph C a merging procedure is executed on these clusters just like in COBRA. At the second iteration, same things happen again. In subgraph D COBRAS first splits the biggest super-instance, which is now $ \mathrm{S_2} $, into two super-instances, $ \mathrm{S_5} $ and $ \mathrm{S_6} $ and forms new clusters $ \mathrm{C_7} $ and $ \mathrm{C_8} $. Later in subgraph E the merging happens based on the constraints and now $ \mathrm{C_5} $ and $ \mathrm{C_7} $ are grouped while $ \mathrm{C_6} $ and $ \mathrm{C_8} $ are grouped. Super-instance $ \mathrm{S_5} $ and $ \mathrm{S_6} $ are in the same cluster but later they are refined and splitted into different clusters, which illustrates COBRAS' ability to finetune the granuity of the clusters.
 \begin{algorithm}[h] \label{algo:cobras}
 	\caption{COBRAS}
 	\begin{algorithmic}[1]
-		
 		\STATE to be completed
 	\end{algorithmic}
 \end{algorithm}
+
+A COBRAS procedure is elaborated in \fref{fig:cobras_procedure}. At the very beginning, in subgraph A there is only one super-instance $ \mathrm{S_0} $ containing all the instances, and there is one cluster $ \mathrm{C_0} $ containing super-instance $ \mathrm{S_0} $.  At the first iteration, in subgraph B COBRAS first splits the biggest super-instance, which is $ \mathrm{S_0} $, into four small super-instances, $ \mathrm{S_1} $, $ \mathrm{S_2} $, $ \mathrm{S_3} $ and $ \mathrm{S_4} $, respectively. New clusters are formed with these new super-instances, which are  $ \mathrm{C_1} $,  $ \mathrm{C_2} $,  $ \mathrm{C_3} $ and  $ \mathrm{C_4} $, correspondly. Later in subgraph C a merging procedure is executed on these clusters just like in COBRA. At the second iteration, same things happen again. In subgraph D COBRAS first splits the biggest super-instance, which is now $ \mathrm{S_2} $, into two super-instances, $ \mathrm{S_5} $ and $ \mathrm{S_6} $ and forms new clusters $ \mathrm{C_7} $ and $ \mathrm{C_8} $. Later in subgraph E the merging happens based on the constraints and now $ \mathrm{C_5} $ and $ \mathrm{C_7} $ are grouped while $ \mathrm{C_6} $ and $ \mathrm{C_8} $ are grouped. Super-instance $ \mathrm{S_5} $ and $ \mathrm{S_6} $ are in the same cluster but later they are refined and splitted into different clusters, which illustrates COBRAS' ability to finetune the granuity of the clusters.
 
 \begin{figure}
 	\centering
@@ -160,9 +181,7 @@ A COBRAS procedure is elaborated in \fref{fig:cobras_procedure}. At the very beg
 	\label{fig:cobras_procedure}
 \end{figure}
 
-
-
-The learning curve of COBRA and COBRAS are compared in \fref{fig:learning_curve_cobras}. For COBRA, when the number of super-instances is small, as shown in the orange curve, the clustering quality increases quickly at first but can only reach a suboptimal level. When the number of super-instances is big, as shown in the red curve, relatively good clustering result is obtained in the end but it takes more queries to get this result. For COBRAS, as shown in the dotted blue curve, not only optimal clustering result is obtained in the end, but also the clustering performance is already high within fewer queries. 
+The learning curve of COBRA and COBRAS are compared in \fref{fig:learning_curve_cobras}. For COBRA, when the number of super-instances is small, as shown in the orange curve, the clustering quality increases quickly at first but can only reach a suboptimal level. When the number of super-instances is big, as shown in the red curve, relatively good clustering result is obtained in the end but it takes more queries to get this result. For COBRAS, as shown in the dotted blue curve, not only optimal clustering result is obtained in the end, but also the clustering performance is already high within fewer queries.  
 
 The clustering result of COBRA and COBRAS are compared in \fref{fig:result_cobras}. From left to right, results of CORBA with 10 initial super-instances, COBRA with 100 initial super-instances, COBRAS are shown. Dots having the same color are clustered into the same group. The difference between images on the upper layer and the lower layer is the query number that is used. We can see that both COBRA with 100 initial super-instances and CORBAS can obtain perfect result in the end. However, COBRAS is more query-efficient as it obtain this result within 36 queries, while COBRA with 100 initial super-instances needs 103 queries. For COBRA with 10 initial super-instances, it stucks after 14 queries and ends in a suboptimal clustering. As we can see in the red circle, the yellow cluster has included a small part which is expected to be in the brown cluster, which is the phenomenon of underclustering. In all, COBRAS beats COBRA for its ability to converge to high-quality clustering in shorter time with fewer queries.  
 
@@ -185,7 +204,7 @@ The clustering result of COBRA and COBRAS are compared in \fref{fig:result_cobra
 \subsection{$ \mathrm{COBRAS^{TS}} $}
 Clustering on time series data is more subjective. There are several elements in time series data which are important, such as time scale, amplitude scale, number of peaks, etc. Different users might focus differently on those elements. Besides, some users might pay more attention to the monotonic behaviour of the time series data, while other users might pay more attention to the periodic behaviour of the time series data. Sometimes users might be interested in whether there are specific patterns in the time series data. Thus, using semi-supervised learning to exploit users' expert knowledge is very important in time series clustering.
 
-I had discussed COBRAS's ability to obtain perfect clustering efficiently as a semi-supervised clustering method. However, when it comes to time series data, things are not that simple. COBRAS is not inherently suitable for time series data mainly for two reasons. The first one is that COBRAS uses Euclidean distance, which is not the start-of-art distance measure for time series data. The second one is that COBRAS uses K-means algorithm to split super-instances, which is again not that suitable for time series data. The good thing is that we can still make good use of COBRAS by keeping its main idea and injecting distance measure and clustering method that are suitable for time series data. It is how $ \mathrm{COBRAS^{DTW}} $ is introduced. As shown in \ref{algo:cobrasts} $ \mathrm{COBRAS^{DTW}} $ replaces the Euclidean distance with the DTW(Dynamic timeseries wrapping) mentioned above, and uses spectral clustering to split super-instances. As it is COBRAS specifically for time series data, we also refer it $ \mathrm{COBRAS^{TS}} $.
+I had discussed COBRAS's ability to obtain perfect clustering efficiently as a semi-supervised clustering method. However, when it comes to time series data, things are not that simple. COBRAS is not inherently suitable for time series data mainly for two reasons. The first one is that COBRAS uses Euclidean distance, which is not the start-of-art distance measure for time series data. The second one is that COBRAS uses K-means algorithm to split super-instances, which is again not that suitable for time series data. The good thing is that we can still make good use of COBRAS by keeping its main idea and injecting distance measure and clustering method that are suitable for time series data. It is how $ \mathrm{COBRAS^{DTW}} $ is introduced. As shown in \ref{algo:cobrasts} $ \mathrm{COBRAS^{DTW}} $ replaces the Euclidean distance with the DTW mentioned above, and uses spectral clustering to split super-instances. As it is COBRAS specifically for time series data, we also refer it $ \mathrm{COBRAS^{TS}} $.
 
 \begin{algorithm}[h] \label{algo:cobrasts}
 	\caption{$ \mathrm{COBRAS^{TS}} $}
@@ -197,7 +216,7 @@ I had discussed COBRAS's ability to obtain perfect clustering efficiently as a s
 \end{algorithm}
 
 \subsection{others}
-\subsection{motivation of selecting COBRAS}
+\subsection{motivation of selecting $ \mathrm{COBRAS^{TS}} $}
 
 
 %%% Local Variables: 
