@@ -3,9 +3,9 @@
   %inputenc=utf8,
   title={Explaining time series clusters},
   author={Simiao Lin},
-  promotor={Prof. Hendrik Blockeel\and Prof. Wannes Meert},
+  promotor={Prof. dr. ir. H. Blockeel\and Dr. ir. W. Meert},
   assessor={??\and ??},
-  assistant={Dr. Aras Yurtman}}
+  assistant={Dr. A. Yurtman}}
 % Remove the "%" on the next line for generating the cover page
 %\setup{coverpageonly}
 % Remove the "%" before the next "\setup" to generate only the first pages
@@ -53,12 +53,16 @@ Finally, my gratitude also goes to my family for their sympathetic ear. You are 
 \tableofcontents*
 
 \begin{abstract}
- Many applications of machine learning involve time series data (e.g. sensor measurements). An approach that has been successfully applied in the DTAI research group is \texttt{COBRAS-TS}, a semi-supervised time series clustering to detect novel patterns or features. Such features can then be used in applications such as anomaly detection or prognostics.
+An important aspect of applying machine learning models to real-world use cases is interpretability. These novel features need to be explained or shown to domain experts. In this thesis I make use of the DTW () distance measure, DBA (DTW barycenter averaging) and contraints from $ \mathrm{COBRAS^{TS}} $ to summarize why a set of time series are clustered together and how one cluster differs from other clusters. 
 
-An important aspect of applying machine learning models to real-world use cases is interpretability. These novel features need to be explained or shown to domain experts. In this thesis I make use of the Dynamic Time Warping (\texttt{DTW}) distance measure, \texttt{DTW} barycenter averaging(\texttt{DBA}) and contraints from   \texttt{COBRAS-TS}   to summarize why a set of time series are clustered together and how one cluster differs from other clusters. 
+In semi-supervised machine learning (ML) techniques, expert feedback is leveraged, but the result is often not interpretable and hard to be evaluated by an expert. There are large datasets where it is possible to apply such ML techniques thanks to the increasing computational power of computers, but it becomes even more difficult to interpret results for such large datasets. Time series can be represented visually and hence advantageous over other formats such as attribute-value pairs, so it is quite valuable to have interpretable results for time series. This is especially important for semi-supervised systems because the expert who contributes to the result might want to evaluate it as well. 
+
+In this thesis, we focus on semi-supervised clustering of time series. We employ the most query-efficient technique to date, Constraint-based Repeated Aggregation and Splitting for Time Series ($ \mathrm{COBRAS^{TS}} $), which has been developed by the DTAI research group at KU Leuven. $ \mathrm{COBRAS^{TS}} $ exploits expert knowledge by querying users constraints between pairs of time series instances. It also introduces the concept of super-instance, which is a group of similar instances, to reduce the number of queries.  $ \mathrm{COBRAS^{TS}} $ iteratively aggregates and splits super-instances to obtain a clustering of fine granuity. As for measuring similarity between time series instances, Dynamic Time Warping (DTW) is chosen. Unlike Euclidean distance, which strictly abides by the time axis, DTW finds the best alignment between two time series instances by warping and computes their distance based on it. DTW itself has good explanation ability thanks to the fact that warping process is recorded. As for the averaging in time series data, DTW Barycenter Averaging (DBA) is chosen as it can capture the most important trend of instances, while in the arithmetic mean characteristics of the original instances are averaged in the time axis and the information about peaks and troughs are blurred. 
+
+As distance measure and averaging are different in time series data, the traditional deviation method doesn't work well for them. We propose in this paper new types of deviations for time series instances, warped horizontal deviation and warped vertical deviation respectively, and illustrate how warped horiztional deviation is sacrificed to get smaller warped vertical deviation inside a cluster. We also propose a way to connect the essential contraints provided by users to show why two time series instances are clustered together, or vice versa.
 
 
-\end{abstract}
+\end{abstract} 
 
 % A list of figures and tables is optional
 %\listoffigures
@@ -72,13 +76,14 @@ An important aspect of applying machine learning models to real-world use cases 
 \section*{Abbreviations}
 \begin{flushleft}
   \renewcommand{\arraystretch}{1.1}
-  \begin{tabularx}{\textwidth}{@{}p{12mm}X@{}}
+  \begin{tabularx}{\textwidth}{@{}p{20mm}X@{}}
  
 DTW       & Dynamic Time Warping     \\ 
 
 DBA       & DTW Barycenter Averaging \\    
 COBRA    & Constraint-based Repeated Aggregation \\
 COBRAS     & Constraint-based Repeated Aggregation and Splitting \\
+$ \mathrm{COBRAS^{TS} }$    & Constraint-based Repeated Aggregation and Splitting for Time Series\\
   \end{tabularx}
 \end{flushleft}
 \section*{Symbols}
