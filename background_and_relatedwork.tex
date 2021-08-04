@@ -5,7 +5,7 @@ Before all, time series related terminology is introduced in more details.
 These include distance measurement methods, averaging methods and semi-supervised clustering methods in perspective of time series. Apart from the basic ones, I also introduce the variant ones.
 
 \section{Dissimilarity measurement for time series}
-Euclidean distance is commonly used in measuring distances between two points, two vectors, etc. It is simple and competitive for many senarios. However, it is not the best choice in some domains, such as time series. Time series data are sensitive to time axis. Even though they share similar shapes they might not match well in Euclidean distance because their shifts or speed might not sychronize. A better way of measuring distance between time series that can capture their similarities is Dynamic Time Wrapping (DTW).
+Euclidean distance is commonly used in measuring distances between two points, two vectors, etc. It is simple and competitive for many senarios. However, it is not the best choice in some domains, such as time series. Time series data are sensitive to time axis. Even though they share similar shapes they might not match well in Euclidean distance because their shifts or speed might not sychronize. A better way of measuring distance between time series that can capture their similarities is Dynamic Time Warping (DTW).
 \subsection{DTW}
 Dynamic time warping (DTW) is a well-known method to measure the distance between time series instances (could be also called sequences). \cref{fig:dtw_vs_normal} gives an intuitive illustration of the difference between Euclidean distance and DTW.  \cref{fig:dtw_vs_normal} (a) shows two time series, A and B, respectively. We are interested in their similarity.  \cref{fig:dtw_vs_normal} (b) illustrates how points in A and B are mapped to each other in Euclidean distance. We can see that the point of index $ i $ in A is mapped to point of index $ i $ in B. Unlike Euclidean distance,  \cref{fig:dtw_vs_normal} (c) shows that in DTW, there is no such necessity that point of index $ i $ in A is mapped to point of index $ i $ in B. Actually in this case point of index $i  $ in A is mapped to point of index $ i+2 $ in B. DTW is designed in such way to find optimal alignment between two time series. Intuitively, it uses dynamic programming to map two time series in a way that similar values, e.g. peaks and troughs are mapped together. 
 
@@ -28,7 +28,7 @@ Before diving into the details of DTW algorithm, I would like to first introduce
 	\item The mapping of indices from one time series to the other time series should be monotonically increasing. For example, if $ i < j $ are indices from one time series, and $ k < l $ are indices from the other time series, there is no such mapping like index $ i $ is mapped to index $ l $ and index $ j $ is mapped to index $ k $.
 \end{itemize}
 
-DTW finds the best alignment between two time series while satisfying these preconditions by solving a dynamic programming problem. Suppose there are two sequences, sequence $ S $ of length $ n $ and sequence $ T$ of length $ m $. DTW maintains a two-dimension distance matrix of size $ n * m $, where element with index $ i, j $ records the accumulated distance of the best alignment between subsequence of $ S $ with indices from $ 0 $ to $ i $ and subsequence of $ T $ with indices from $ 0 $ to $ j $. In \cref{fig:dtw_w_all}, we are interested in the accumulated distance between index $ i $ in first sequence and index $ j $ in the second sequence.  At this moment index i is mapped to index j, which in shown in blue line. To meet with the preconditions of DTW mentioned above, there are three possibilities on the choice of the former alignment, index $ i-1 $ mapped to index $ j $, index $ i $ mapped to index $ j-1 $ and index $ i-1 $ mapped to index $ j-1 $, which are shown in red lines. The alignment of the three has the smallest accumulated distance will be chosen. Let's look into the DTW algorithm. From line 2 to 6, it initializes the matrix with the distance of index pairs in two sequences. From line 13 to 17, it modifies each element of the matrix by adding the smallest accumulated distance of the three possible former alignments.
+DTW finds the best alignment between two time series while satisfying these preconditions by solving a dynamic programming problem. Suppose there are two sequences, sequence $ S $ of length $ n $ and sequence $ T$ of length $ m $. DTW maintains a two-dimension distance matrix of size $ n * m $, where element with index $ i, j $ records the accumulated distance of the best alignment between subsequence of $ S $ with indices from $ 0 $ to $ i $ and subsequence of $ T $ with indices from $ 0 $ to $ j $. In \cref{fig:dtw_w_all}, we are interested in the accumulated distance between index $ i $ in first sequence and index $ j $ in the second sequence.  At this moment index i is mapped to index j, which in shown in blue line. To meet with the preconditions of DTW mentioned above, there are three possibilities on the choice of the former alignment, index $ i-1 $ mapped to index $ j $, index $ i $ mapped to index $ j-1 $ and index $ i-1 $ mapped to index $ j-1 $, which are shown in red lines. The alignment of the three having the smallest accumulated distance will be chosen. Let's look into the DTW algorithm. From line 2 to 6, it initializes the matrix with the distance of index pairs in two sequences. From line 13 to 17, it modifies each element of the matrix by adding the smallest accumulated distance of the three possible former alignments.
 
 \begin{figure}[!htb]
 	\centering
@@ -72,7 +72,7 @@ DTW finds the best alignment between two time series while satisfying these prec
 \end{algorithm}
 
 
-I will illustrate DTW with a specific example. In \cref{fig:dtw_ex_1} (a) we are interested in the distance of two time series P adn Q. In this case we use Manhattan distance as the base distance. Intuitively they are similar in shapes, but their similarity does not match well in time axis. Let's see how DTW does the warping magic to match their similarity and compute a small distance between them. In \cref{fig:dtw_ex_1} (b), when we look at the $ 7th $ index of sequence P (with a value of 6) and the $ 3th $ index of sequence Q (with a value of 4), we can see that the original Manhattan distance between them is $ |6 - 4| $, which is 2. To get the smallest accumulated distance for them, we first look at the accumulated distance of the three possible alignment before them. The accumulated distance of the $ 6th $ index of P and the $ 2th $ index of Q is 23. The accumulated distance of the $ 6th $ index of P and the $ 3th $ index of Q is 14. The accumulated distance of the $ 7th $ index of P and the $ 2th $ index of Q is 28. Obviously, the smallest of the three is 14, so the accumulated distance of the $ 7th $ index of P and the $ 3th $ index of Q is $ 14+2=16$, which is circled in blue. Finally, we can see that the distance between P and Q is 0 if computed by DTW, which indicates the high similarity between P and Q. Besides, we can easily backtrack from the end of the matrix by choosing the smallest accumulated distance step by step. In this way we can visualize how P is warped to Q in the whole DTW process.
+I will illustrate DTW with a specific example. In \cref{fig:dtw_ex_1} (a) we are interested in the distance of two time series P adn Q. In this case we use Manhattan distance as the base distance. Intuitively they are similar in shapes, but they are slightly shifted in time from each other. Let's see how DTW does the warping magic to match their similarity and compute a small distance between them. In \cref{fig:dtw_ex_1} (b), when we look at the $ 7th $ index of sequence P (with a value of 6) and the $ 3th $ index of sequence Q (with a value of 4), we can see that the original Manhattan distance between them is $ |6 - 4| $, which is 2. To get the smallest accumulated distance for them, we first look at the accumulated distance of the three possible alignment before them. The accumulated distance of the $ 6th $ index of P and the $ 2th $ index of Q is 23. The accumulated distance of the $ 6th $ index of P and the $ 3th $ index of Q is 14. The accumulated distance of the $ 7th $ index of P and the $ 2th $ index of Q is 28. Obviously, the smallest of the three is 14, so the accumulated distance of the $ 7th $ index of P and the $ 3th $ index of Q is $ 14+2=16$, which is circled in blue. Finally, we can see that the distance between P and Q is 0 if computed by DTW, which indicates the high similarity between P and Q. Besides, we can easily backtrack from the end of the matrix by choosing the smallest accumulated distance step by step, which is shown with a grey background. In this way we can visualize how P is warped to Q in the whole DTW process.
 
 
 \begin{figure}[htbp]
@@ -89,16 +89,71 @@ I will illustrate DTW with a specific example. In \cref{fig:dtw_ex_1} (a) we are
 
 \subsection{others (eg. soft, k-shape, in brief)}
 \subsection{motivation for selecting DTW}
-DTW not only captures amplitude information of time series and computes their distance based on it, but also records how two time series are mapped to each other in the process of wrapping. In other words, the wrapping can be seen as evidence why two time series are similar to each other, or vise versa. DTW itself has good explanation ability.
+DTW not only captures amplitude information of time series and computes their distance based on it, but also records how two time series are mapped to each other in the process of warping. In other words, the warping can be seen as evidence why two time series are similar to each other, or vise versa. DTW itself has good explanation ability.
 
 
-\section{Averaging methods}
-Apart from selecting the proper distance measure method for time series instances, choosing the right averaging method for time series instances is also of much importance. A suitable average of time series should reflect the overall trend of them as well as the peak and bottom message. 
+\section{Averaging methods for time series}
+Apart from selecting the proper distance measure method for time series instances, choosing the right averaging method for time series instances is also of much importance. A suitable average of time series should reflect the overall trend of them without missing other important characteristics, such as peaks and troughs. DTW Barycenter Averaging (DBA) is designed for this purpose.
 \subsection{DBA}
-DTW Barycenter Averaging(DBA) is designed as such that first initialize the average as the medoid of the time series instances, then update the average by averaging the wrapping of other time series instances from the current average for serveral times. Note that the wrapping of the time series instance from the current average is calculated with DTW. 
+As can bee seen from its name, DTW Barycenter Averaging (DBA) makes use of DTW. It first initializes the average as the medoid of the time series instances, which has the smallest sum of distances to all the other instances. After the initialization, DBA updates the average iteractively. At each iteraction, it first computes the DTW between every sequence and the old average. For each coordinate in the old average, in every sequence there are one or more coordinates that are mapped to it. finding the coordinates that are associated to averaging the warping of other time series instances from the current average iteractively. Note that the warping of the time series instance from the current average is calculated with DTW. 
+
+\begin{algorithm}[h] \label{algo:second}
+	\caption{second}
+	\begin{algorithmic}[0]
+		\REQUIRE $ p = (a, b): couple  $
+		\STATE \RETURN $ b $
+	\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}[h] \label{algo:barycenter}
+	\caption{barycenter}
+	\begin{algorithmic}[0]
+		\REQUIRE $ X_1, ..., X_n $
+		\STATE \RETURN $ \frac{X_1 + ... + X_n} {n} $
+	\end{algorithmic}
+\end{algorithm}
+
+
+\begin{algorithm}[h] \label{algo:dba}
+	\caption{DBA}
+	\begin{algorithmic}[0]
+		 \REQUIRE $ \mathrm{C = <C_{1}, ...,C_{T^{'}} >}$ the initial average sequence
+		\ \REQUIRE $ \mathrm{S_1 = <S_{1_1}, ...,S_{1_T} >}$ the 1st sequence to average
+		
+		.
+		
+		.
+		
+		.
+		
+	 \REQUIRE$ \mathrm{S_n = <S_{n_1}, ...,S_{n_T} >}$ the nth sequence to average
+	\noindent	\STATE \textbf{Let} $  T $ be the length of the sequences
+	\noindent \STATE \textbf{Let} $ assocTab $ be a table of size $ T^{'} $ containing in each cell a set of coordinates associated to each coordinate of C
+		\STATE \textbf{Let} $ m[T, T] $ be a temporary DTW (cost, path) matrix
+		\STATE $ assocTab \leftarrow [\emptyset, ...,\emptyset] $
+	
+		\FOR {$ seq $ in S}
+	
+		\STATE $ m \leftarrow DTW(C, seq) $
+		\STATE $ i \leftarrow T^{'} $
+		\STATE $ j \leftarrow T $
+		\WHILE {$ i >= 1 $ and $ j >= 1 $}
+			\STATE $assocTab[i] \leftarrow assocTab[i] \bigcup seq_j $
+			\STATE $(i, j) \leftarrow second(m[i,j])  $
+		\ENDWHILE
+		\ENDFOR
+
+		\FOR { i = 1 to T}
+		\STATE $ {C_i}^{'} = barycenter(assocTab[i]) $
+		\ENDFOR
+		\STATE \textbf{return} $ {C_i}^{'}$
+	\end{algorithmic}
+\end{algorithm}
+
+
 \subsection{others}
 \subsection{motivation for using DBA}
-As we can see from \fref{fig:arithmetic} and \fref{fig:dba}, DBA can capture the most important trend of instances, while the characteristic of the original instances are averaged in the time axis so the information about peaks and bottoms are blurred in the arithmetic mean. As a result, I select DBA as the averaging method in this paper. 
+As we can see from \fref{fig:arithmetic} and \fref{fig:dba}, DBA can capture the most important trend of instances, while the characteristic of the original instances are averaged in the time axis so the information about peaks and troughs are blurred in the arithmetic mean. As a result, I select DBA as the averaging method in this paper. 
 
 \begin{figure}[htbp]
 	\centering
