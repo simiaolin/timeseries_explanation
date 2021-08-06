@@ -97,7 +97,7 @@ DTW not only captures amplitude information of time series and computes their di
 \section{Averaging methods for time series}
 Apart from selecting the proper distance measure method for time series instances, choosing the right averaging method for time series instances is also of much importance. A suitable average of time series should reflect the overall trend of them without missing other important characteristics, such as peaks and troughs. DTW Barycenter Averaging (DBA) is designed for this purpose.
 \subsection{DBA}
-As can bee seen from its name, DTW Barycenter Averaging (DBA) makes use of DTW. It first initializes the average as the medoid of the time series instances, which is the one among all the time series instances that has the smallest sum of distances to all the other instances. After the initialization, DBA updates the average iteractively. Algorithm DBA shows how the average is updated at each iteration provided the old average and the sequences. At each iteraction, it first computes the DTW between every sequence and the old average. For each coordinate in the old average, in every sequence there are one or more coordinates that are associated with it, DBA updates the coordinate with the barycenter of all the coordinates associated to it. DBA lets DTW refine its association iteratively and has the ability to converge the average gradually. DBA outperforms other averaging methods on sequences in a few ways. Firstly, it is a global averaging method, which means it is insensitive to the ordering of the sequences, which makes sure the stability of the average. Secondly, it modifies the coordinates of the average overtime, but it doesn't change the length of the average, which is another sign of stability. Thirdly, the within group sum of squares (WGSS) of DBA is much smaller than other averaging methods. Last but not least, it is more robust to the diversity of sequences, which means its performance is less influenced if sequences are more mixed.
+As can bee seen from its name, DTW Barycenter Averaging (DBA) makes use of DTW. It first initializes the average as the medoid of the time series instances, which is the one among all the time series instances that has the smallest sum of distances to all the other instances. After the initialization, DBA updates the average iteractively. Algorithm DBA shows how the average is updated at each iteration provided the old average and the sequences. At each iteraction, it first computes the DTW between every sequence and the old average. For each coordinate in the old average, in every sequence there are one or more coordinates that are associated with it, DBA updates the coordinate with the barycenter of all the coordinates associated to it. DBA lets DTW refine its association iteratively and has the ability to converge the average gradually. DBA outperforms other averaging methods on sequences in a few ways. Firstly, it is a global averaging method, which means it is insensitive to the ordering of the sequences, which makes sure the stability of the average. Secondly, it modifies the coordinates of the average overtime, but it doesn't change the length of the average, which is another sign of stability. Thirdly, the within group sum of squares (WGSS) of DBA is much smaller than other averaging methods. Last but not least, it is more robust to the diversity of sequences, which means its performance is less influenced if sequences are more mixed. 
 
 \begin{algorithm}[h] \label{algo:second}
 	\caption{second}
@@ -131,7 +131,7 @@ As can bee seen from its name, DTW Barycenter Averaging (DBA) makes use of DTW. 
 	 \REQUIRE$ \mathrm{S_n = <S_{n_1}, ...,S_{n_T} >}$ the nth sequence to average
 	\noindent	\STATE \textbf{Let} $  T $ be the length of the sequences
 	\noindent \STATE \textbf{Let} $ assocTab $ be a table of size $ T^{'} $ containing in each cell a set of coordinates associated to each coordinate of C
-		\STATE \textbf{Let} $ m[T, T] $ be a temporary DTW (cost, path) matrix
+		\STATE \textbf{Let} $ m[ \mathrm{T^{'}}, T] $ be a temporary DTW (cost, path) matrix
 		\STATE $ assocTab \leftarrow [\emptyset, ...,\emptyset] $
 	
 		\FOR {$ seq $ in S}
@@ -145,7 +145,7 @@ As can bee seen from its name, DTW Barycenter Averaging (DBA) makes use of DTW. 
 		\ENDWHILE
 		\ENDFOR
 
-		\FOR { i = 1 to T}
+		\FOR { i = 1 to $  \mathrm{T^{'}}$}
 		\STATE $ {C_i}^{'} = barycenter(assocTab[i]) $
 		\ENDFOR
 		\STATE \textbf{return} $ {C_i}^{'}$

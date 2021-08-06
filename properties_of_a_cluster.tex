@@ -3,13 +3,15 @@
 Given a time series clustering obtained by $ \mathrm{COBRAS^{TS}} $, we are interested in interpretable properties for each cluster. In the context of time series, such properties could be the average, variance, peak sand troughs, etc. Average is the most important characteristic. As for it, we have introduced DTW Barycenter Average (DBA), a global averaging method that can retain the important trends of the time series. However, as for the variance, the traditional variance no longer works well because neither the distance measure throughout $ \mathrm{COBRAS^{TS}} $ nor DBA is based on the Euclidean distance. Inspired by the DBA, we propose warping variance and warping deviation that are tailored for time series. 
 
 \section{warping deviation}
-Before introducing the warping variance, let's first look back how the time series average is obtained in DBA. In \cref{fig:dba} there are three sequences, S, Q and Avg, where Avg is the DBA of S and Q. Specifically, coordinate $ \mathrm{Avg_9} $ is associated with coordinates $ \mathrm{S_5} $, $ \mathrm{S_6} $ and $ \mathrm{S_7} $ in S, and coordinate $ \mathrm{Q_10} $ in Q. Remember the Barycenter Algorithm in \cref{algo:barycenter}, we have:
+Before introducing the warping variance, let's first look back how the time series average is obtained in DBA. In \cref{fig:prop_dba} there are three sequences, S, Q and Avg, where Avg is the DBA of S and Q. Specifically, coordinate $ \mathrm{Avg_9} $ is associated with coordinates $ \mathrm{S_5} $, $ \mathrm{S_6} $ and $ \mathrm{S_7} $ in S, and coordinate $ \mathrm{Q_10} $ in Q. Remember the Barycenter Algorithm in \cref{algo:barycenter}, we have:
 
 \begin{center}
 	$ \mathrm{Avg_9 = \frac{S_5 + S_6 + S_7 + Q_{10}}  {4}}  $
 \end{center} 
 
-Traditionally, given for each coordinate in the average, variance is calculated as below:
+Traditionally, given sequencs and their average, variance and standard deviation are calculated as below. However, this has several problems in the context of time series. First of all, there is no guarantee that all the sequences have the same length. Even if all the sequences were of the same length, there is still no guarantee in DBA that the average shares the same length with the sequences. It is recommeded that the average has the same length as the sequences, but it is not a must. Both traditional variance  and standard deviation require that the sequences and average have the same length, otherwise it is impossible to calculate the variance and standard deviation.
+
+Suppose the length requirements are satisfied, there still exists big problems in traditional variance and deviation. In \cref{fig:tra_var}, we can see that when calculating the variance or standard deviation for the the $ 9th $ coordinate in the average sequence Avg, which is $ \mathrm{Avg_9} $, we refer to the $ 9th $ coordinates in sequences S and  Q, which are $ \mathrm{S_9} $ and $ \mathrm{Q_9} $, respectively. Indeed, $ \mathrm{Avg_9} $ is aligned with $ \mathrm{S_9} $ and $ \mathrm{Q_9} $ in the time axis, but in the context of DTW it is aligned with $ \mathrm{S_5} $, $ \mathrm{S_6} $, $ \mathrm{S_7} $ and $ \mathrm{Q_{10}} $, which is shown in \cref{fig:prop_dba}. DTW is applied not only in $ \mathrm{COBRAS^{TS}} $ but also in $ \mathrm{DBA} $. To better reflect the alignments in DTW, we slightly change the definition of standard deviation and propose \textbf{warping deviation} that can capture the warping information. 
 
 
 \begin{algorithm}[h] \label{algo:variance}
@@ -17,7 +19,7 @@ Traditionally, given for each coordinate in the average, variance is calculated 
 	
 		\begin{algorithmic}[0]
 		\REQUIRE $ \mathrm{C = <C_{1}, ...,C_{T^{'}} >}$ the average sequence with length $ T^{'} $
-		\ \REQUIRE $ \mathrm{S_1 = <S_{1_1}, ...,S_{1_T} >}$ the 1st sequence to average 
+		\REQUIRE $ \mathrm{S_1 = <S_{1_1}, ...,S_{1_T} >}$ the 1st sequence to average 
 		
 		.
 		
@@ -37,11 +39,11 @@ Traditionally, given for each coordinate in the average, variance is calculated 
 
 
 \begin{algorithm}[h] \label{algo:std_deviation}
-	\caption{standard deviation}
+	\caption{std\_deviation}
 	
 	\begin{algorithmic}[0]
 		\REQUIRE $ \mathrm{C = <C_{1}, ...,C_{T^{'}} >}$ the average sequence with length $ T^{'} $
-		\ \REQUIRE $ \mathrm{S_1 = <S_{1_1}, ...,S_{1_T} >}$ the 1st sequence to average 
+		\REQUIRE $ \mathrm{S_1 = <S_{1_1}, ...,S_{1_T} >}$ the 1st sequence to average 
 		
 		.
 		
@@ -61,14 +63,70 @@ Traditionally, given for each coordinate in the average, variance is calculated 
 
 
 
+\begin{algorithm}[h] \label{algo:warping_deviation}
+	\caption{warping deviation}
+	\begin{algorithmic}[0]
+		\REQUIRE $ \mathrm{C = <C_{1}, ...,C_{T^{'}} >}$ the average sequence
+		\ \REQUIRE $ \mathrm{S_1 = <S_{1_1}, ...,S_{1_T} >}$ the 1st sequence to average
+		
+		.
+		
+		\REQUIRE$ \mathrm{S_n = <S_{n_1}, ...,S_{n_T} >}$ the nth sequence to average
+		\noindent	\STATE \textbf{Let} $  T $ be the length of the sequences
+
+		\noindent \STATE \textbf{Let} $ assocX $ be a table of size $ T^{'} $ containing in each cell a set of values in the X axis (time axis) of coordinates that are associated to each coordinate of C
+			\noindent \STATE \textbf{Let} $ assocY $ be a table of size $ T^{'} $ containing in each cell a set of values in the Y axis (value axis) of coordinates that are associated to each coordinate of C
+		\noindent \STATE \textbf{Let} $ horizontalWarpingDeviation $  be an array of size $ T^{'} $ 
+		\noindent \STATE \textbf{Let} $ verticalWarpingDeviation $  be an array of size $ T^{'} $ 
+		\STATE \textbf{Let} $ m[\mathrm{T^{'}} , T] $ be a temporary DTW (cost, path) matrix
+		\STATE $ assocX \leftarrow [\emptyset, ...,\emptyset] $
+		\STATE $ assocY \leftarrow [\emptyset, ...,\emptyset] $
+		\STATE $ horizontalWarpingDeviation \leftarrow [0, ...,0]$
+		 \STATE $ verticalWarpingDeviation \leftarrow [0, ...,0] $
+		 
+		\FOR {$ seq $ in S}
+			\STATE $ m \leftarrow DTW(C, seq) $
+			\STATE $ i \leftarrow T^{'} $
+			\STATE $ j \leftarrow T $
+			\WHILE {$ i >= 1 $ and $ j >= 1 $}
+				\STATE $assocY[i] \leftarrow assocY[i] \bigcup seq_j $
+				\STATE $assocX[i] \leftarrow assocX[i] \bigcup j $
+				\STATE $(i, j) \leftarrow second(m[i,j])  $
+			\ENDWHILE
+		\ENDFOR
+		
+		\FOR { i = 1 to $\mathrm{T^{'}}  $}
+			\STATE $ horizontalWarpingDeviation[i] = std\_deviation(assocX[i], C_i) $
+			\STATE $ verticalWarpingDeviation[i] = std\_deviation(assocY[i], C_i) $
+	
+		\ENDFOR
+		
+		\STATE \textbf{return} $horizontalWarpingDeviation,   verticalWarpingDeviation$
+	\end{algorithmic}
+\end{algorithm}
+
+
+
+
 
 \begin{figure}[htbp]
+	
+		\centering
+	\begin{minipage}[t]{0.48\textwidth}
+	
 	\centering
 	\includegraphics[width=\linewidth]{pics/properties/dba}
 	\caption{Association of coordinates from sequences to a coordinate of average}
-	\label{fig:dba}
-\end{figure}
+	\label{fig:prop_dba}
+	\end{minipage}
 
-\subsection{Mathematically}
+	\begin{minipage}[t]{0.48\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{pics/properties/tra_var}
+		\caption{traditional variance and standard deviation}
+		\label{fig:tra_var}
+	\end{minipage}
+
+\end{figure}
 \section{result of experiments}
 \subsection{multiple datasets}
