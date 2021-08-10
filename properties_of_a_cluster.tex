@@ -128,28 +128,75 @@ We select \textbf{ECG} and \textbf{Trace} to experiment because the lengths of t
 
 
 \section{Experiments}
-We 
+The experiment procedure is designed as below. \cref{fig:properties_process} shows the flow of the experiment.
+\begin{enumerate} 
+	\item Perform $ \mathrm{COBRAS^{TS}} $ on the whole dataset and obtain the clustering result. We mock the query part by getting contraints from the labels of the instances. If the labels of two instances are the same, we suppose there is a must-link between them. On the contrary, if the labels of two instances are different, we suppose there is a cannot-link between them. After obtain the clustering result, select one cluster we are interested in to explain its properties.
+	\item Compute the DBA of the sequences in the selected cluster, which is shown in the purple arrow.
+	\item Based on DBA and the sequences, compute the vertical warping deviation, which is shown in the pink arrows. Similarly, compute the horizontal warping deviation, which is shown in green arrows. 
+	We also compute the traditional unwarping deviation, but it is not shown in \cref{fig:properties_process} because it is relatively unrelavent. We still compute it as we want to compare it the vertical warping deviation to see the difference.
+	\item Show DBA together with warping deviations. Specifically, surround each coordinate of DBA with an eclipse with a width of the corresponding horizontal warping deviation and a height of the corresponding vertical warping deviation. This step is shown in blue arrows. 
+\end{enumerate}
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=\linewidth]{pics/properties/ecg/cluster0_all}
+	\caption{DBA with warping deviations}
+	\label{fig:properties_process}
+	
+\end{figure}
+
 \subsection{Experiment on ECG dataset}
-\subsection{Experiment on Trace dataset}
-First, we did an experiment on the ECG dataset. T
+We did an experiment on the ECG dataset, and we set the query budget to 100. To explain the cluster properties, we select the cluster having more time series instances. We plot the DBA and all the instances of the selected cluster in \cref{fig:instances_and_dba}. We can see that DBA can capture the main trend of the instances. Still, some dark blue sequnces which have a high peak at the end don't seem similar with other red or orange sequences which have earlier and lower peaks. Furthermore, the peak information of the blue sequences seems lost in the DBA. We will explain more later, and for now we just keep going on explaining the properties of the cluster.
+
+With the DBA and the instances, we then compute three types of deviations, and they are shown in \cref{fig:three_deviation}. Thinking about the characteristic of DTW, it is no wonder that the vertical warping deviation (the pink curve in the left image) is smaller than the traditional unwarping deviation (the grey curve in the middle image). DTW warps sequnces in the X axis (time axis) to decrease their differnce in the Y axis (value axis), so the vertical warping deviation is smaller. Though DTW decreases the vertical warping deviation, gain comes with lost. The horizontal warping deviation (green curve in the right image) is much bigger. This is consistant with the fact that DTW sacrifices the deviation on the time axis.
+
+To combine the DBA and two types of warping deviations, we introduce \textbf{deviation eclipse}. For each coordinate in the DBA, we surround it with an eclipse, where the height of the eclipse is set to be the vertical warping deviation, and the width of the eclipse is set to be the horizontal warping deviation. The wider the eclipse is, the larger the horizontal warping deviation is for the corresponding coordinate. The taller the eclipse is, the larger the vertical warping deviation.
+
 \begin{figure}[htbp]	
 	\centering
-	\begin{minipage}[t]{\textwidth}
-	
-	\centering
-	\includegraphics[width=\linewidth]{pics/properties/instances_and_dba}
-	\caption{DBA and instances}
+	\includegraphics[width=\linewidth]{pics/properties/ecg/cluster0_dba}
+	\caption{(a) DBA (b) instances [dataset: ECG]}
 	\label{fig:instances_and_dba}
-	\end{minipage}
-
-	\begin{minipage}[t]{\textwidth}
-		\centering
-		\includegraphics[width=\linewidth]{pics/properties/three_deviations}
-		\caption{(a) Vertical Warping Deviation (b) Standard Deviation (c) Horizontal Warping Deviation}
-		\label{fig:three_deviation}
-	\end{minipage}
-
 \end{figure}
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=\linewidth]{pics/properties/ecg/cluster0_deviation}
+	\caption{(a) Vertical Warping Deviation (b) Standard Deviation (c) Horizontal Warping Deviation [dataset: ECG]}
+	\label{fig:three_deviation}
+\end{figure}
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=\linewidth]{pics/properties/ecg/cluster0_eclipse}
+	\caption{DBA with warping deviations [dataset: ECG]}
+	\label{fig:dba_and_warpingdeviations}
+\end{figure}
+
+\subsection{Experiment on Trace dataset}
+We also performed an experiment on the Trace dataset with a query budget of 100. The length of sequences in Trace dataset is 275, almost three times as that of ECG dataset, which is 96. Both datasets contain 200 instances, but it takes much longer to complete the experiment on Trace. There are four clusters, and all of them have good cohesion. In other words, the sequences in each cluster look rather similar. 
+
+\begin{figure}[htbp]	
+	\centering
+	\includegraphics[width=\linewidth]{pics/properties/trace/cluster0_dba}
+	\caption{(a) DBA (b) instances [dataset: Trace]}
+	\label{fig:instances_and_dba}
+\end{figure}
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=\linewidth]{pics/properties/trace/cluster0_deviation}
+	\caption{(a) Vertical Warping Deviation (b) Standard Deviation (c) Horizontal Warping Deviation [dataset: Trace]}
+	\label{fig:three_deviation}
+\end{figure}
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=\linewidth]{pics/properties/trace/cluster0_eclipse}
+	\caption{DBA with warping deviations [dataset: Trace]}
+	\label{fig:dba_and_warpingdeviations}
+\end{figure}
+
 
 \section{Conclusion}
 
