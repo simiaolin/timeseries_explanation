@@ -174,29 +174,31 @@ To combine the DBA and two types of warping deviations, we introduce \textbf{dev
 \end{figure}
 
 \subsection{Experiment on Trace dataset}
-We also performed an experiment on the Trace dataset with a query budget of 100. The length of sequences in Trace dataset is 275, almost three times as that of ECG dataset, which is 96. Both datasets contain 200 instances, but it takes much longer to complete the experiment on Trace. There are four clusters, and all of them have good cohesion. In other words, the sequences in each cluster look rather similar. 
+We also performed an experiment on the Trace dataset with a query budget of 100. The length of sequences in Trace dataset is 275, almost three times as that of ECG dataset, which is 96. Both datasets contain 200 instances, but it takes much longer to complete the experiment on Trace. There are four clusters, and all of them have good cohesion. In other words, the sequences in each cluster look rather similar. We select one of the four to show the properties. 
+
+We can see that in \cref{fig:instances_and_dba_trace} the DBA can well capture the shape of the sequences. Besides, it can well maintain the peak information. Remember in \cref{bg:dba}, the algorithmetic mean fails to maintain this peak information. In \cref{fig:three_deviation_trace}, we witness big horizontal warping deviation and small vertial warping deviation again. The difference between vertical warping deviation and traditional unwarping deviation is greater than that in the ECG dataset. One reason is that in ECG sequences in a cluster are not that similar in shape, so even with the warping of DTW, there is no much decrease on the vertical warping deviation. However, the sequences in the selected cluster in Trace are very similar in shape and they are obviously shifted from each other in time axis, so the DBA beats algorithmetic mean an d correspondingly the vertical warping deviation is obviously smaller than the traditional unwarping deviation. We also have the DBA with deviation eclipsed in \cref{fig:dba_and_warpingdeviations_trace}.
 
 \begin{figure}[htbp]	
 	\centering
 	\includegraphics[width=\linewidth]{pics/properties/trace/cluster0_dba}
 	\caption{(a) DBA (b) instances [dataset: Trace]}
-	\label{fig:instances_and_dba}
+	\label{fig:instances_and_dba_trace}
 \end{figure}
 
 \begin{figure}[htbp]
 	\centering
 	\includegraphics[width=\linewidth]{pics/properties/trace/cluster0_deviation}
 	\caption{(a) Vertical Warping Deviation (b) Standard Deviation (c) Horizontal Warping Deviation [dataset: Trace]}
-	\label{fig:three_deviation}
+	\label{fig:three_deviation_trace}
 \end{figure}
 
 \begin{figure}[htbp]
 	\centering
 	\includegraphics[width=\linewidth]{pics/properties/trace/cluster0_eclipse}
 	\caption{DBA with warping deviations [dataset: Trace]}
-	\label{fig:dba_and_warpingdeviations}
+	\label{fig:dba_and_warpingdeviations_trace}
 \end{figure}
 
 
 \section{Conclusion}
-
+So far we have introduce the newly proposed warping deviations, compare them with the traditional unwarping deviation, and shows them in the form of curve as well as eclipses around the DBA curve. They can give users an intuitive way of looking into each cluster. However, users might be still interested in why two sequences are clustered in a same group, such as the doubts we raised in the experiment on ECG dataset. Users might also have interest in why two sequences are clustered in two different groups. Only explainning the properties of clusters can not answer these problems. We will look into more about the  $ \mathrm{COBRAS^{TS}} $ and solve these doubts.
