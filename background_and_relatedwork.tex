@@ -2,7 +2,7 @@
 \chapter{Background and related work}
 \label{cha:related_work}
 Before all, time series related terminology is introduced in more details.
-These include distance measurement methods, averaging methods and semi-supervised clustering methods in perspective of time series. Apart from the basic ones, I also introduce the variant ones.
+These include distance measurement methods, averaging methods and semi-supervised clustering methods in perspective of time series. 
 
 \section{Dissimilarity measurement for time series}
 Euclidean distance is commonly used in measuring distances between two points, two vectors, etc. It is simple and competitive for many senarios. However, it is not the best choice in some domains, such as time series. Time series data are sensitive to time axis. Even though they share similar shapes they might not match well in Euclidean distance because their shifts or speed might not sychronize. A better way of measuring distance between time series that can capture their similarities is Dynamic Time Warping (DTW).
@@ -88,9 +88,7 @@ I will illustrate DTW with a specific example. In \cref{fig:dtw_ex_1} (a) we are
 \end{figure}
 
 
-
-\subsection{others (eg. soft, k-shape, in brief)}
-\subsection{motivation for selecting DTW}
+\subsection{Motivation for selecting DTW}
 DTW not only captures amplitude information of time series and computes their distance based on it, but also records how two time series are mapped to each other in the process of warping. In other words, the warping can be seen as evidence why two time series are similar to each other, or vise versa. DTW itself has good explanation ability.
 
 
@@ -152,9 +150,7 @@ As can bee seen from its name, DTW Barycenter Averaging (DBA) makes use of DTW. 
 	\end{algorithmic}
 \end{algorithm}
 
-
-\subsection{others}
-\subsection{motivation for using DBA}
+\subsection{Motivation for using DBA}
 As we can see from \fref{fig:arithmetic} and \fref{fig:dba}, DBA can capture the most important trend of instances, while the characteristic of the original instances are averaged in the time axis so the information about peaks and troughs are blurred in the arithmetic mean. As a result, I select DBA as the averaging method in this paper. 
 
 \begin{figure}[htbp]
@@ -272,8 +268,7 @@ I had discussed COBRAS's ability to obtain perfect clustering efficiently as a s
 	\end{algorithmic}
 \end{algorithm}
 
-\subsection{others}
-\subsection{motivation of selecting $ \mathrm{COBRAS^{TS}} $}
+\subsection{Motivation of selecting $ \mathrm{COBRAS^{TS}} $}
 
 \section{Explnation of clustering}
 

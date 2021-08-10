@@ -2,7 +2,7 @@
 \label{cha:properties_of_a_cluster}
 Given a time series clustering obtained by $ \mathrm{COBRAS^{TS}} $, we are interested in interpretable properties for each cluster. In the context of time series, such properties could be the average, deviation, peak sand troughs, etc. Average is the most important characteristic. As for it, we have introduced DTW Barycenter Average (DBA), a global averaging method that can retain the important trends of the time series. Deviation is used to describe the deviation of sequences from the average. The the traditional variance no longer works well because neither the distance measure throughout $ \mathrm{COBRAS^{TS}} $ nor DBA is based on the Euclidean distance. Inspired by the DBA, we propose warping deviation that are specifically designed for time series. 
 
-\section{warping deviation}
+\section{Warping deviation}
 Before introducing the warping variance, let's first look back how the time series average is obtained in DBA. In \cref{fig:prop_dba} there are three sequences, S, Q and Avg, where Avg is the DBA of S and Q. Specifically, coordinate $ \mathrm{Avg_9} $ is associated with coordinates $ \mathrm{S_5} $, $ \mathrm{S_6} $ and $ \mathrm{S_7} $ in S, and coordinate $ \mathrm{Q_10} $ in Q. Remember the Barycenter Algorithm in \cref{algo:barycenter}, we have:
 
 \begin{center}
@@ -13,7 +13,12 @@ Traditionally, given sequencs and their average, standard deviation of each coor
 
 Suppose the length requirements are satisfied, there still exists big problems standard deviation. In \cref{fig:prop_tra_var}, we can see that when calculating the standard deviation for the the $ 9th $ coordinate in the average sequence Avg, which is $ \mathrm{Avg_9} $, we refer to the $ 9th $ coordinates in sequences S and  Q, which are $ \mathrm{S_9} $ and $ \mathrm{Q_9} $, respectively. Indeed, $ \mathrm{Avg_9} $ is aligned with $ \mathrm{S_9} $ and $ \mathrm{Q_9} $ in the time axis, but in the context of DTW it is aligned with $ \mathrm{S_5} $, $ \mathrm{S_6} $, $ \mathrm{S_7} $ and $ \mathrm{Q_{10}} $, which is shown in \cref{fig:prop_dba}. DTW is applied not only in $ \mathrm{COBRAS^{TS}} $ but also in $ \mathrm{DBA} $. To better reflect the alignments in DTW, we slightly change the definition of standard deviation and propose \textbf{warping deviation} that can capture the warping information. 
 
-More details about warping deviation is shown in \ref{algo:warping_deviation}. The main difference between the warping deviation and traditional unwarping deviation is the selection of coordinates that are used to compared with the coordinates in DBA. In traditional unwarping deviation \ref{algo:unwarping_deviation}, for each coordinate $ C_i $ with index $ i $ in DBA, those coordinates in sequences in the same time axis $ S_{1_i}, S_{2_i}, ...,S_{n_i} $ as are chosen. In our newly proposed warping deviation, for each coordinate $ C_i $ in DBA, those coordinates in sequences that are warped to $ C_i $ in DTW are chosen. For every coordinate, it has two values, X value (value on the time axis) and Y value. Normally, when talking about deviation, we only care about the deviation on the Y axis, because there is a premise that Xvalues of coordinates mapped to the coordinate on the DBA are the same, so it is meaningless to compute the deviation on the X axis. However, in the context of DTW, the values of coordinates warped to a coordinate in DBA on the X axis are not the same, and the difference between them implies important information like how much DTW warps sequences to associate them with DBA. As a result, apart from \textbf{vertical warping deviation}, we also introduce \textbf{horizontal warping deviation}. Correspondingly in the algorithm, we have $ assocY[i] $, which are the values in the Y axis (value axis) of coordinates that are associated to coordiante $ C_i $. We also have $ assocX[i] $, which are the values in the X axis (time axis) of coordinates that are associated to $ i $ (X value of coordinate $ C_i$). 
+More details about warping deviation is shown in \ref{algo:warping_deviation}. The main difference between the warping deviation and traditional unwarping deviation is the selection of coordinates that are used to compared with the coordinates in DBA. In traditional unwarping deviation \ref{algo:unwarping_deviation}, for each coordinate $ C_i $ with index $ i $ in DBA, those coordinates in sequences in the same time axis $ S_{1_i}, S_{2_i}, ...,S_{n_i} $ as are chosen. In our newly proposed warping deviation, for each coordinate $ C_i $ in DBA, those coordinates in sequences that are warped to $ C_i $ in DTW are chosen. 
+
+For every coordinate, it has two values, X value (value on the time axis) and Y value. Normally, when talking about deviation, we only care about the deviation on the Y axis, because there is a premise that Xvalues of coordinates mapped to the coordinate on the DBA are the same, so it is meaningless to compute the deviation on the X axis. However, in the context of DTW, the values of coordinates warped to a coordinate in DBA on the X axis are not the same, and the difference between them implies important information like how much DTW warps sequences to associate them with DBA. As a result, apart from \textbf{vertical warping deviation}, which reflects the deviation on the Y axis, we also introduce \textbf{horizontal warping deviation} that reflets the deviation on the X axis. 
+
+Correspondingly in the algorithm, we have $ assocY[i] $, which are the values in the Y axis (value axis) of coordinates that are associated to coordiante $ C_i $. We also have $ assocX[i] $, which are the values in the X axis (time axis) of coordinates that are associated to $ i $ (X value of coordinate $ C_i$). By computing the standard deviation of $ assocY[i] $ on the basis of $ C_i $, we get the vertical warping deviation. Similarly, the standard deviation of $ assocX[i] $ on the basis of $ i $ is the horitonal warping deviation. 
+
 
 
 \begin{algorithm}[h] \label{algo:std_deviation}
@@ -96,7 +101,6 @@ More details about warping deviation is shown in \ref{algo:warping_deviation}. T
 \end{algorithm}
 
 \begin{figure}[htbp]
-	
 	\centering
 	\begin{minipage}[t]{0.48\textwidth}
 		
@@ -115,7 +119,19 @@ More details about warping deviation is shown in \ref{algo:warping_deviation}. T
 	
 \end{figure}
 
+\section{Datasets}
+The datasets used in this thesis are from the UCR Time Series Classification Archive \cite{UCRArchive2018}. It is introduced in 2002 and has become an important resource in the context of time series. It is used to verify that DTW has greater ability than Euclidean distance in terms of measuring similarity between time series data. Up to now there are 128 time series datasets in the UCR Archive, and for each dataset all the time series are labeled. As a result, they are suitable for training classification or clustering problems. That is the reason we choose datasets from the UCR Archive.
 
+Concerning the fact that the time spent on computing DTW is quadratic to the length of time series, we avoid selecting datasets that contain long time series as DTW is not only widely used in $ \mathrm{COBRAS^{TS}} $, but also widely used in DBA and unwarping deviation. We mainly focus on explain the result of clustering. In other words, we explain based on the assumptions that the result is already obtained. Therefore, to obtain the clustering result we don't have to distinguish train set and test set. That is to say, we can directly train on the whole dataset.
+
+We select \textbf{ECG} and \textbf{Trace} to experiment because the lengths of time sereis in them are reasonable, 96 and 275, respectively. There are both 200 time series in ECG and Trace. For ECG, there are two classes, but the instances are relatively diverse. From the perspective of non-professionals, instances with the same label are not very similar while instances with different labels are not very differnet in ECG. For Trace, there are four classes. Contrary to ECG, instances in Trace with the same label are mostly similar and instances with different labels are mostly different.
+
+
+\section{Experiments}
+We 
+\subsection{Experiment on ECG dataset}
+\subsection{Experiment on Trace dataset}
+First, we did an experiment on the ECG dataset. T
 \begin{figure}[htbp]	
 	\centering
 	\begin{minipage}[t]{\textwidth}
@@ -135,5 +151,5 @@ More details about warping deviation is shown in \ref{algo:warping_deviation}. T
 
 \end{figure}
 
-\section{result of experiments}
-\subsection{multiple datasets}
+\section{Conclusion}
+
