@@ -1,11 +1,11 @@
 \documentclass[master=mai,masteroption=bda]{kulemt}
 \setup{% Remove the "%" on the next line when using UTF-8 character encoding
-  %inputenc=utf8,
-  title={Explaining time series clusters},
-  author={Simiao Lin},
-  promotor={Prof. dr. ir. H. Blockeel\and Dr. ir. W. Meert},
-  assessor={??\and ??},
-  assistant={Dr. A. Yurtman}}
+	%inputenc=utf8,
+	title={Explaining time series clusters},
+	author={Simiao Lin},
+	promotor={Prof. dr. ir. H. Blockeel\and Dr. ir. W. Meert},
+	assessor={Oscar Mauricio Agudelo},
+	assistant={Dr. A. Yurtman}}
 % Remove the "%" on the next line for generating the cover page
 %\setup{coverpageonly}
 % Remove the "%" before the next "\setup" to generate only the first pages
@@ -29,98 +29,98 @@
 % The lipsum package is used to generate random text.
 % You never need this in a real master's thesis text!
 \IfFileExists{lipsum.sty}%
- {\usepackage{lipsum}\setlipsumdefault{11-13}}%
- {\newcommand{\lipsum}[1][11-13]{\par And some text: lipsum ##1.\par}}
+{\usepackage{lipsum}\setlipsumdefault{11-13}}%
+{\newcommand{\lipsum}[1][11-13]{\par And some text: lipsum ##1.\par}}
 %%%%%%%
 
 %\includeonly{chap-n}
 \begin{document}
-
-\begin{preface}
-Throughout the writing of this thesis I have received a great deal of support and assistance.
-
-I would first like to thank my advisor, Aras Yurtman. You are always so supportive and patient. I learn a lot on how to conduct a research from you on our weekly meeting. I could not have completed this thesis without advice and encouragement you give me all the time. 
-
-I would also like to acknowledge my supervisors, Wannes Meert and Prof. Hendrik Blockeel,  whose expertise was invaluable in formulating the research questions and methodology. 
-
-In addition, I would like to thank my accessors for reading the text.
-
-Finally, my gratitude also goes to my family for their sympathetic ear. You are always there resting my mind outside the research.
-
-
-\end{preface}
-
-\tableofcontents*
-
-\begin{abstract}
-%An important aspect of applying machine learning models to real-world use cases is interpretability. These novel features need to be explained or shown to domain experts. In this thesis we make use of the DTW (Dynamic Time Warping) distance measure, DBA (DTW barycenter averaging) and contraints from $ \mathrm{COBRAS^{TS}} $ to summarize why a set of time series are clustered together and how one cluster differs from other clusters. 
-
-In semi-supervised machine learning (ML) techniques, expert feedback is leveraged, but the result is often not interpretable and hard to be evaluated by an expert. There are large datasets where it is possible to apply such ML techniques thanks to the increasing computational power of computers, but it becomes even more difficult to interpret results for such large datasets. Time series can be represented visually and hence advantageous over other formats such as attribute-value pairs, so it is quite valuable to have interpretable results for time series. This is especially important for semi-supervised systems because the expert who contributes to the result might want to evaluate it as well. 
-
-In this thesis, we focus on semi-supervised clustering of time series. We employ the most query-efficient technique to date, Constraint-based Repeated Aggregation and Splitting for Time Series ($ \mathrm{COBRAS^{TS}} $), which has been developed by the DTAI research group at KU Leuven. $ \mathrm{COBRAS^{TS}} $ exploits expert knowledge by querying users constraints between pairs of time series instances. It also introduces the concept of super-instance, which is a group of similar instances, to reduce the number of queries.  $ \mathrm{COBRAS^{TS}} $ iteratively aggregates and splits super-instances to obtain a clustering of fine granuity. As for measuring similarity between time series instances, Dynamic Time Warping (DTW) is chosen. Unlike Euclidean distance, which strictly abides by the time axis, DTW finds the best alignment between two time series instances by warping and computes their distance based on it. DTW itself has good explanation ability thanks to the fact that warping process is recorded. As for the averaging in time series data, DTW Barycenter Averaging (DBA) is chosen as it can capture the most important trend of instances, while in the arithmetic mean characteristics of the original instances are averaged in the time axis and the information about peaks and troughs are blurred. 
-
-As distance measure and averaging are different in time series data, the traditional deviation method doesn't work well for them. We propose in this paper new types of deviations for time series instances, warped horizontal deviation and warped vertical deviation respectively, and illustrate how warped horiztional deviation is sacrificed to get smaller warped vertical deviation inside a cluster. We also propose a way to connect the essential contraints provided by users to show why two time series instances are clustered together, or vice versa.
-
-
-\end{abstract} 
-
-% A list of figures and tables is optional
-%\listoffigures
-%\listoftables
-% If you only have a few figures and tables you can use the following instead
-
-\listoffiguresandtables
-% The list of symbols is also optional.
-% This list must be created manually, e.g., as follows:
-\chapter{List of Abbreviations and Symbols}
-\section*{Abbreviations}
-\begin{flushleft}
-  \renewcommand{\arraystretch}{1.1}
-  \begin{tabularx}{\textwidth}{@{}p{20mm}X@{}}
- 
-DTW       & Dynamic Time Warping     \\ 
-
-DBA       & DTW Barycenter Averaging \\    
-COBRA    & Constraint-based Repeated Aggregation \\
-COBRAS     & Constraint-based Repeated Aggregation and Splitting \\
-$ \mathrm{COBRAS^{TS} }$    & Constraint-based Repeated Aggregation and Splitting for Time Series\\
-  \end{tabularx}
-\end{flushleft}
-\section*{Symbols}
-\begin{flushleft}
-  \renewcommand{\arraystretch}{1.1}
-  \begin{tabularx}{\textwidth}{@{}p{12mm}X@{}}
-    42    & ``The Answer to the Ultimate Question of Life, the Universe,
-            and Everything'' according to\\
-    $c$   & Speed of light \\
-
-  \end{tabularx}
-\end{flushleft}
-
-% Now comes the main text
-\mainmatter
-
-\include{intro} 
-\include{background_and_relatedwork}
-\include{problem_definition}
-\include{properties_of_a_cluster}
-\include{cluster_membership}
-
-\include{conclusion}
-
-% If you have appendices:
-%\appendixpage*          % if wanted
-%\appendix
-%\include{app-A}
-% ... and so on until
-%\include{app-n}
-
-\backmatter
-% The bibliography comes after the appendices.
-% You can replace the standard "abbrv" bibliography style by another one.
-\bibliographystyle{abbrv}
-\bibliography{references}
-
+	
+	\begin{preface}
+		Throughout the writing of this thesis, I have received a great deal of support and assistance.
+		
+		I would first like to thank my advisor, Aras Yurtman. You are always so supportive and patient. I learn a lot about how to research you at our weekly meeting. I could not have completed this thesis without the advice and encouragement you give me all the time. 
+		
+		I would also like to acknowledge my supervisors, Wannes Meert and Prof. Hendrik Blockeel,  whose expertise was invaluable in formulating the research questions and methodology. 
+		
+		In addition, I would like to thank my accessors for reading the text.
+		
+		Finally, my gratitude also goes to my family for their sympathetic ear. You are always there resting my mind outside the research.
+		
+		
+	\end{preface}
+	
+	\tableofcontents*
+	
+	\begin{abstract}
+		%An important aspect of applying machine learning models to real-world use cases is interpretability. These novel features need to be explained or shown to domain experts. In this thesis we make use of the DTW (Dynamic Time Warping) distance measure, DBA (DTW barycenter averaging), and constraints from $ \mathrm{COBRAS^{TS}} $ to summarize why a set of time series are clustered together and how one cluster differs from other clusters. 
+		
+		In semi-supervised machine learning (ML) techniques, expert feedback is leveraged, but the result is often not interpretable and is hard to be evaluated by an expert. There are large datasets where it is possible to apply such ML techniques thanks to the increasing computational power of computers, but it becomes even more difficult to interpret results for such large datasets. Time series can be represented visually and hence advantageous over other formats such as attribute-value pairs, so it is quite valuable to have interpretable results for time series. This is especially important for semi-supervised systems because the expert who contributes to the result might want to evaluate it as well. 
+		
+		In this thesis, we focus on the semi-supervised clustering of time series. We employ the most query-efficient technique to date, Constraint-based Repeated Aggregation and Splitting for Time Series ($ \mathrm{COBRAS^{TS}} $), which has been developed by the DTAI research group at KU Leuven. $ \mathrm{COBRAS^{TS}} $ exploits expert knowledge by querying users' constraints between pairs of time series instances. It also introduces the concept of super-instance, which is a group of similar instances, to reduce the number of queries.  $ \mathrm{COBRAS^{TS}} $ iteratively aggregates and splits super-instances to obtain a clustering of fine granularity. As for measuring similarity between time series instances, Dynamic Time Warping (DTW) is chosen. Unlike Euclidean distance, which strictly abides by the time axis, DTW finds the best alignment between two time series instances by warping and computes their distance based on it. DTW itself has good explanation ability thanks to the fact that the warping process is recorded. As for the averaging in time series data, DTW Barycenter Averaging (DBA) is chosen as it can capture the most important trend of instances, while in the arithmetic mean characteristics of the original instances are averaged in the time axis and the information about peaks and troughs are blurred. 
+		
+		As distance measure and averaging are different in time series data, the traditional deviation method doesn't work well for them. We propose in this paper new types of deviations for time series instances, warped horizontal deviation, and warped vertical deviation respectively, and illustrate how warped horizontal deviation is sacrificed to get smaller warped vertical deviation inside a cluster. We also propose a way to connect the essential constraints provided by users to show why two time series instances are clustered together, or vice versa.
+		
+		
+	\end{abstract} 
+	
+	% A list of figures and tables is optional
+	%\listoffigures
+	%\listoftables
+	% If you only have a few figures and tables you can use the following instead
+	
+	\listoffiguresandtables
+	% The list of symbols is also optional.
+	% This list must be created manually, e.g., as follows:
+	\chapter{List of Abbreviations and Symbols}
+	\section*{Abbreviations}
+	\begin{flushleft}
+		\renewcommand{\arraystretch}{1.1}
+		\begin{tabularx}{\textwidth}{@{}p{20mm}X@{}}
+			
+			DTW       & Dynamic Time Warping     \\ 
+			
+			DBA       & DTW Barycenter Averaging \\    
+			COBRA    & Constraint-based Repeated Aggregation \\
+			COBRAS     & Constraint-based Repeated Aggregation and Splitting \\
+			$ \mathrm{COBRAS^{TS} }$    & Constraint-based Repeated Aggregation and Splitting for Time Series\\
+		\end{tabularx}
+	\end{flushleft}
+	\section*{Symbols}
+	\begin{flushleft}
+		\renewcommand{\arraystretch}{1.1}
+		\begin{tabularx}{\textwidth}{@{}p{12mm}X@{}}
+			42    & ``The Answer to the Ultimate Question of Life, the Universe,
+			and Everything'' according to\\
+			$c$   & Speed of light \\
+			
+		\end{tabularx}
+	\end{flushleft}
+	
+	% Now comes to the main text
+	\mainmatter
+	
+	\include{intro} 
+	\include{background_and_relatedwork}
+	\include{problem_definition}
+	\include{properties_of_a_cluster}
+	\include{cluster_membership}
+	
+	\include{conclusion}
+	
+	% If you have appendices:
+	%\appendixpage*          % if wanted
+	%\appendix
+	%\include{app-A}
+	% ... and so on until
+	%\include{app-n}
+	
+	\backmatter
+	% The bibliography comes after the appendices.
+	% You can replace the standard "abbrev" bibliography style with another one.
+	\bibliographystyle{abbrv}
+	\bibliography{references}
+	
 \end{document}
 
 %%% Local Variables: 
