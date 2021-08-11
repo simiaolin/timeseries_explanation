@@ -42,8 +42,9 @@ DTW finds the best alignment between two time series while satisfying these prec
 
 
 
-\begin{algorithm}[h] \label{algo:dtw}
+\begin{algorithm}[h] 
 	\caption{DTW (S: array[1...n], T: array[1...m])}
+	\label{algo:dtw}
 	\begin{algorithmic}[1]
 	\REQUIRE sequence S of length n
 	\REQUIRE sequence T of length m	
@@ -97,16 +98,18 @@ Apart from selecting the proper distance measure method for time series instance
 \subsection{DBA}
 As can bee seen from its name, DTW Barycenter Averaging (DBA) makes use of DTW. It first initializes the average as the medoid of the time series instances, which is the one among all the time series instances that has the smallest sum of distances to all the other instances. After the initialization, DBA updates the average iteractively. Algorithm DBA shows how the average is updated at each iteration provided the old average and the sequences. At each iteraction, it first computes the DTW between every sequence and the old average. For each coordinate in the old average, in every sequence there are one or more coordinates that are associated with it, DBA updates the coordinate with the barycenter of all the coordinates associated to it. DBA lets DTW refine its association iteratively and has the ability to converge the average gradually. DBA outperforms other averaging methods on sequences in a few ways. Firstly, it is a global averaging method, which means it is insensitive to the ordering of the sequences, which makes sure the stability of the average. Secondly, it modifies the coordinates of the average overtime, but it doesn't change the length of the average, which is another sign of stability. Thirdly, the within group sum of squares (WGSS) of DBA is much smaller than other averaging methods. Last but not least, it is more robust to the diversity of sequences, which means its performance is less influenced if sequences are more mixed. 
 
-\begin{algorithm}[h] \label{algo:second}
+\begin{algorithm}[h] 
 	\caption{second}
+	\label{algo:second}
 	\begin{algorithmic}[0]
 		\REQUIRE $ p = (a, b): couple  $
 		\STATE \RETURN $ b $
 	\end{algorithmic}
 \end{algorithm}
 
-\begin{algorithm}[h] \label{algo:barycenter}
+\begin{algorithm}[h]
 	\caption{barycenter}
+	 \label{algo:barycenter}
 	\begin{algorithmic}[0]
 		\REQUIRE $ X_1, ..., X_n $
 		\STATE \RETURN $ \frac{X_1 + ... + X_n} {n} $
@@ -114,8 +117,9 @@ As can bee seen from its name, DTW Barycenter Averaging (DBA) makes use of DTW. 
 \end{algorithm}
 
 
-\begin{algorithm}[h] \label{algo:dba}
+\begin{algorithm}[h]
 	\caption{DBA}
+	 \label{algo:dba}
 	\begin{algorithmic}[0]
 		 \REQUIRE $ \mathrm{C = <C_{1}, ...,C_{T^{'}} >}$ the initial average sequence
 		\ \REQUIRE $ \mathrm{S_1 = <S_{1_1}, ...,S_{1_T} >}$ the 1st sequence to average
@@ -192,11 +196,12 @@ Suppose we have $  N$ instances, to get the relation between all the instance pa
 
 The order the constraints are obtained is important. You can not do contraint expansion if you have two cannot-links, as both transitivity rule and entailment rule can not be used in this case. However, as long as one of the constraint is must-link, contraint expansion is possible. As a result, it would be better if we could get must-links earlier. In other words, users should be queried the most similar pair of instances.
 
-All of the above clustering methods produce very good clustering. Still, they need a large number of queries to reach perfect result. We need a better algorithm to decrease the query number, especially for clustering on large datasets. COBRA is designed for this purpose. COBRA introduces \textit{super-instance}, which is a small group of similar instances. COBRA get super-instances using K-means algorithm, and later only cluster on the representatives of the super-instance. The representative of a super-instance could be its medoid. Like mentioned above, when querying the constraints between pairs of representatives, the closest one is chosen to query first to obtain must-link as early as possible. COBRA keeps querying users and attempting to merge the super-instances until all the links for pairs of representatives in the cluster are cannot-links, which means no super-instances could be merged further. The COBRA algorithm is shown in detail in \ref{algo:cobra}. 
+All of the above clustering methods produce very good clustering. Still, they need a large number of queries to reach perfect result. We need a better algorithm to decrease the query number, especially for clustering on large datasets. COBRA is designed for this purpose. COBRA introduces \textit{super-instance}, which is a small group of similar instances. COBRA get super-instances using K-means algorithm, and later only cluster on the representatives of the super-instance. The representative of a super-instance could be its medoid. Like mentioned above, when querying the constraints between pairs of representatives, the closest one is chosen to query first to obtain must-link as early as possible. COBRA keeps querying users and attempting to merge the super-instances until all the links for pairs of representatives in the cluster are cannot-links, which means no super-instances could be merged further. The COBRA algorithm is shown in detail in \cref{algo:cobra}. 
 
 
-\begin{algorithm}[h] \label{algo:cobra}
+\begin{algorithm}[h]
 	\caption{COBRA}
+	 \label{algo:cobra}
 	\begin{algorithmic}[1]
 		
 		\STATE to be completed
@@ -218,8 +223,9 @@ Although COBRA can greatly reduce the query number and increase the speed of get
 
 COBRAS is designed to automatically form clusters of better granuity. It refines COBRA by giving chance to split super-instances after it is formed. A main difference between COBRAS and COBRA is that in COBRAS , even if instances that are not expected to be in the same cluster are merged together in some phase, there still exists the chance for them to separate later. In other words, in COBRA there are only merging, but in COBRAS merging and splitting happen alternately, until the query budget is used up. Another important difference betwen COBRAS and COBRA is that in COBRAS there is no such need to set up an initial super-instance number, as COBRAS can decide it by itself. 
 
-\begin{algorithm}[h] \label{algo:cobras}
+\begin{algorithm}[h]
 	\caption{COBRAS}
+	 \label{algo:cobras}
 	\begin{algorithmic}[1]
 		\STATE to be completed
 	\end{algorithmic}
@@ -257,10 +263,11 @@ The clustering result of COBRA and COBRAS are compared in \fref{fig:result_cobra
 \subsection{$ \mathrm{COBRAS^{TS}} $}
 Clustering on time series data is more subjective. There are several elements in time series data which are important, such as time scale, amplitude scale, number of peaks, etc. Different users might focus differently on those elements. Besides, some users might pay more attention to the monotonic behaviour of the time series data, while other users might pay more attention to the periodic behaviour of the time series data. Sometimes users might be interested in whether there are specific patterns in the time series data. Thus, using semi-supervised learning to exploit users' expert knowledge is very important in time series clustering.
 
-We had discussed COBRAS's ability to obtain perfect clustering efficiently as a semi-supervised clustering method. However, when it comes to time series data, things are not that simple. COBRAS is not inherently suitable for time series data mainly for two reasons. The first one is that COBRAS uses Euclidean distance, which is not the start-of-art distance measure for time series data. The second one is that COBRAS uses K-means algorithm to split super-instances, which is again not that suitable for time series data. The good thing is that we can still make good use of COBRAS by keeping its main idea and injecting distance measure and clustering method that are suitable for time series data. It is how $ \mathrm{COBRAS^{DTW}} $ is introduced. As shown in \ref{algo:cobrasts} $ \mathrm{COBRAS^{DTW}} $ replaces the Euclidean distance with the DTW mentioned above, and uses spectral clustering to split super-instances. As it is COBRAS specifically for time series data, we also refer it $ \mathrm{COBRAS^{TS}} $.
+We had discussed COBRAS's ability to obtain perfect clustering efficiently as a semi-supervised clustering method. However, when it comes to time series data, things are not that simple. COBRAS is not inherently suitable for time series data mainly for two reasons. The first one is that COBRAS uses Euclidean distance, which is not the start-of-art distance measure for time series data. The second one is that COBRAS uses K-means algorithm to split super-instances, which is again not that suitable for time series data. The good thing is that we can still make good use of COBRAS by keeping its main idea and injecting distance measure and clustering method that are suitable for time series data. It is how $ \mathrm{COBRAS^{DTW}} $ is introduced. As shown in \cref{algo:cobrasts} $ \mathrm{COBRAS^{DTW}} $ replaces the Euclidean distance with the DTW mentioned above, and uses spectral clustering to split super-instances. As it is COBRAS specifically for time series data, we also refer it $ \mathrm{COBRAS^{TS}} $.
 
-\begin{algorithm}[h] \label{algo:cobrasts}
+\begin{algorithm}[h] 
 	\caption{$ \mathrm{COBRAS^{TS}} $}
+	\label{algo:cobrasts}
 	\begin{algorithmic}[1]
 		
 		\STATE Compute the full pairwise DTW distance matrix
