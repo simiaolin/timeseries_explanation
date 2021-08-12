@@ -7,7 +7,7 @@ These include distance measurement methods, averaging methods, and semi-supervis
 \section{Dissimilarity measurement for time series}
 Euclidean distance is commonly used in measuring distances between two points, two vectors, etc. It is simple and competitive for many scenarios. However, it is not the best choice in some domains, such as time series. Time series data are sensitive to the time axis. Even though they share similar shapes they might not match well in Euclidean distance because their shifts or speed might not synchronize. A better way of measuring distance between time series that can capture their similarities is Dynamic Time Warping (DTW).
 \subsection{DTW}
-Dynamic time warping (DTW) is a well-known method to measure the distance between time series instances (could be also called sequences). \cref{fig:dtw_vs_normal} gives an intuitive illustration of the difference between Euclidean distance and DTW.  \cref{fig:dtw_vs_normal} (a) shows two time series, A and B, respectively. We are interested in their similarity.  \cref{fig:dtw_vs_normal} (b) illustrates how points in A and B are mapped to each other in Euclidean distance. We can see that the point of index $ i $ in A is mapped to point of index $ i $ in B. Unlike Euclidean distance,  \cref{fig:dtw_vs_normal} (c) shows that in DTW, there is no such necessity that point of index $ i $ in A is mapped to point of index $ i $ in B. Actually in this case point of index $i  $ in A is mapped to point of index $ i+2 $ in B. DTW is designed in such a way to find optimal alignment between two time series. Intuitively, it uses dynamic programming to map two time series in a way that similar values, e.g. peaks and troughs are mapped together. 
+Dynamic time warping (DTW) is a well-known method to measure the distance between time series instances (could be also called sequences). \cref{fig:dtw_vs_normal} gives an intuitive illustration of the difference between Euclidean distance and DTW.  \cref{fig:dtw_vs_normal} (a) shows two time series, A and B, respectively. We are interested in their similarity.  \cref{fig:dtw_vs_normal} (b) illustrates how points in A and B are mapped to each other in Euclidean distance. We can see that the element of A at position $ i $ is mapped to the element of B at position $ i $. Unlike Euclidean distance,  \cref{fig:dtw_vs_normal} (c) shows that in DTW, there is no such necessity that the element of A at position $ i $ is mapped to the element of B at position $ i $. Actually in this case the element of A at position $ i $ is mapped to the element of B at position $ i+2 $. DTW is designed in such a way to find optimal alignment between two time series. Intuitively, it uses dynamic programming to map two time series in a way that similar values, e.g. peaks and troughs are mapped together. 
 
 
 \begin{figure}[!htb]
@@ -21,7 +21,7 @@ Dynamic time warping (DTW) is a well-known method to measure the distance betwee
 	
 \end{figure}
 
-Before diving into the details of the DTW algorithm, we would like to first introduce some premises of DTW. 
+Before diving into the details of the DTW algorithm, we would like to first introduce some properties of DTW. 
 \begin{itemize}
 	\item Every index from one time series should be matched with one or more indices from the other time series.
 	\item The first index from the first time series should be matched with the first index of the second time series. The same rule holds for the last index from the first time series and the last index from the second time series
@@ -99,7 +99,7 @@ Apart from selecting the proper distance measurement method for time series inst
 As can be seen from its name, DTW Barycenter Averaging (DBA) makes use of DTW. It first initializes the average as the medoid of the time series instances, which is the one among all the time series instances that has the smallest sum of distances to all the other instances. After the initialization, DBA updates the average iteratively. Algorithm DBA shows how the average is updated at each iteration provided the old average and the sequences. At each iteration, it first computes the DTW between every sequence and the old average. For each coordinate in the old average, in every sequence there are one or more coordinates that are associated with it, DBA updates the coordinate with the barycenter of all the coordinates associated with it. DBA lets DTW refine its association iteratively and can converge the average gradually. DBA outperforms other averaging methods on sequences in a few ways. Firstly, it is a global averaging method, which means it is insensitive to the ordering of the sequences, which makes sure the stability of the average. Secondly, it modifies the coordinates of the average over time, but it doesn't change the length of the average, which is another sign of stability. Thirdly, the within-group sum of squares (WGSS) of DBA is much smaller than other averaging methods. Last but not least, it is more robust to the diversity of sequences, which means its performance is less influenced if sequences are more mixed. 
 
 \begin{algorithm}[h] 
-	\caption{second}
+	\caption{second \cite{petitjean2011global}}
 	\label{algo:second}
 	\begin{algorithmic}[0]
 		\REQUIRE $ p = (a, b): couple  $
@@ -107,8 +107,8 @@ As can be seen from its name, DTW Barycenter Averaging (DBA) makes use of DTW. I
 	\end{algorithmic}
 \end{algorithm}
 
-\begin{algorithm}[h]
-	\caption{barycenter}
+\begin{algorithm}[h] 
+	\caption{barycenter \cite{petitjean2011global}}
 	\label{algo:barycenter}
 	\begin{algorithmic}[0]
 		\REQUIRE $ X_1, ..., X_n $
@@ -118,7 +118,7 @@ As can be seen from its name, DTW Barycenter Averaging (DBA) makes use of DTW. I
 
 
 \begin{algorithm}[h]
-	\caption{DBA}
+	\caption{DBA  \cite{petitjean2011global}}
 	\label{algo:dba}
 	\begin{algorithmic}[0]
 		\REQUIRE $ \mathrm{C = <C_{1}, ...,C_{T^{'}} >}$ the initial average sequence
@@ -184,7 +184,7 @@ Clustering is subjective. Different users might expect different clustering resu
 \subsection{COBRA}
 COBRA \cite{vancraenendonck2018cobra} is a constraint-based semi-supervised clustering method. Constraint-based clustering does not ask the users the labels of the instances directly. Instead, it queries the relation between instance pairs and adds constraints on the instances. There are two types of constraints, must-link, and cannot-link. A must-link means that two instances should be in the same cluster, while a cannot-link means that two instances should be in different clusters. The target should be asking users as few queries as possible to get a clustering close to the expected one.  
 
-Suppose we have $  N$ instances, to get the relation between all the instance pairs we need $N*(N-1)/2$ queries, so the query number increases exponentially as the instance number grows. We can reduce the query number by introducing \textit{constraint entailment and transitivity}.  Must-link constraints are transitive:
+Suppose we have $  N$ instances, to get the relation between all the instance pairs we need $N*(N-1)/2$ queries, so the number of queries increases exponentially as the instance number grows. We can reduce the number of queries by introducing \textit{constraint entailment and transitivity}.  Must-link constraints are transitive:
 
 \begin{center}$must-link(A, B) \wedge must-link(B, C) \Rightarrow must-link(A, C)$\end{center}
 
@@ -192,11 +192,11 @@ Suppose we have $  N$ instances, to get the relation between all the instance pa
 
 \begin{center}$must-link(A, B) \wedge cannot-link(B, C) \Rightarrow cannot-link(A, C)$\end{center}
 
-\noindent As a result, whenever we get a constraint, we can apply the constraint entailment and transitivity to enlarge the constraint set. In this case, we can decrease the query number.
+\noindent As a result, whenever we get a constraint, we can apply the constraint entailment and transitivity to enlarge the constraint set. In this case, we can decrease the number of queries.
 
 The order the constraints are obtained is important. You can not do constraint expansion if you have two cannot-links, as both transitivity rule and entailment rule can not be used in this case. However, as long as one of the constraints is a must-link, constraint expansion is possible. As a result, it would be better if we could get must-links earlier. In other words, users should be queried for the most similar pair of instances.
 
-All of the above clustering methods produce very good clustering. Still, they need a large number of queries to reach the perfect result. We need a better algorithm to decrease the query number, especially for clustering on large datasets. COBRA is designed for this purpose. COBRA introduces \textit{super-instance}, which is a small group of similar instances. COBRA get super-instances using K-means algorithm, and later only cluster on the representatives of the super-instance. The representative of a super-instance could be its medoid. As mentioned above, when querying the constraints between pairs of representatives, the closest one is chosen to query first to obtain must-link as early as possible. COBRA keeps querying users and attempting to merge the super-instances until all the links for pairs of representatives in the cluster are cannot-links, which means no super-instances could be merged further. The COBRA algorithm is shown in detail in \cref{algo:cobra}. 
+All of the above clustering methods produce very good clustering. Still, they need a large number of queries to reach the perfect result. We need a better algorithm to decrease the number of queries, especially for clustering on large datasets. COBRA is designed for this purpose. COBRA introduces \textit{super-instance}, which is a small group of similar instances. COBRA get super-instances using K-means algorithm, and later only cluster on the representatives of the super-instance. The representative of a super-instance could be its medoid. As mentioned above, when querying the constraints between pairs of representatives, the closest one is chosen to query first to obtain must-link as early as possible. COBRA keeps querying users and attempting to merge the super-instances until all the links for pairs of representatives in the cluster are cannot-links, which means no super-instances could be merged further. The COBRA algorithm is shown in detail in \cref{algo:cobra}. 
 
 
 \begin{algorithm}[h]
@@ -208,7 +208,7 @@ All of the above clustering methods produce very good clustering. Still, they ne
 	\end{algorithmic}
 \end{algorithm}
 
-As shown in \fref{fig:contrain-based-level}, we are going to cluster on five dots, A, B, C, D, and E. The target clustering is that blue dots A, B, and C are in the same cluster, while orange dots D and E are in the same cluster. The lines between instances indicate their relation. Green ones are must-links, while the red ones are cannot-links. The solid lines are the constraints that are needed to query to get the overall relation. In  \fref{fig:contrain-based-level}, relations of all instance pairs are queried, so 10 queries are needed. In \fref{fig:contrain-based-level}b, by using constraint transitivity and entailment, the query number is reduced to 6. In \fref{fig:contrain-based-level}c, by further querying the closest pair of instances first, the query number is further decreased to 4. In \fref{fig:contrain-based-level}d, COBRA beats the former three by introducing super-instances and the query number is only 2. We can see that COBRA can substantially reduce the number of queries, which makes it query-efficient. Besides, there is no need to decide the number of clusters beforehand. However, we need to initialize it with the number of super-instances at the very beginning, and this number has an unignorable effect on the result of the clustering. Moreover, COBRA might not obtain perfect results when instances inside a super-instance actually should not be together. We will explain it in more detail in \ref{sec:COBRAS}.  
+As shown in \fref{fig:contrain-based-level}, we are going to cluster on five dots, A, B, C, D, and E. The target clustering is that blue dots A, B, and C are in the same cluster, while orange dots D and E are in the same cluster. The lines between instances indicate their relation. Green ones are must-links, while the red ones are cannot-links. The solid lines are the constraints that are needed to query to get the overall relation. In  \fref{fig:contrain-based-level}, relations of all instance pairs are queried, so 10 queries are needed. In \fref{fig:contrain-based-level}b, by using constraint transitivity and entailment, the number of queries is reduced to 6. In \fref{fig:contrain-based-level}c, by further querying the closest pair of instances first, the number of queries is further decreased to 4. In \fref{fig:contrain-based-level}d, COBRA beats the former three by introducing super-instances and the number of queries is only 2. We can see that COBRA can substantially reduce the number of queries, which makes it query-efficient. Besides, there is no need to decide the number of clusters beforehand. However, we need to initialize it with the number of super-instances at the very beginning, and this number has an unignorable effect on the result of the clustering. Moreover, COBRA might not obtain perfect results when instances inside a super-instance actually should not be together. We will explain it in more detail in \ref{sec:COBRAS}.  
 
 \begin{figure}
 	\centering
@@ -219,11 +219,11 @@ As shown in \fref{fig:contrain-based-level}, we are going to cluster on five dot
 \end{figure}
 
 \subsection{COBRAS} \label{sec:COBRAS}
-Although COBRA can greatly reduce the query number and increase the speed of getting clustering results, there is one obvious defect of COBRA. Once a super-instance is formed, it can only be merged into a bigger super-instance, and can never be split again. As users, we are asked to provide COBRA with the number of original super-instances so that COBRA can use it in the K-means algorithm to split the data at the very beginning. If we fail to designate a good super-instance number, unexpected results might occur. For instance, if we set the original super-instance number to a number that is too small, we might get under clustering, where instances that are not supposed to be in the same group are clustered together. On the contrary, if we set the original super-instance number to a number that is too big, we might get over clustering, where instances that are supposed to be in the same group are split away. As a result, getting a clustering of perfect granularity
+Although COBRA can greatly reduce the number of queries and increase the speed of getting clustering results, there is one obvious defect of COBRA. Once a super-instance is formed, it can only be merged into a bigger super-instance, and can never be split again. As users, we are asked to provide COBRA with the number of original super-instances so that COBRA can use it in the K-means algorithm to split the data at the very beginning. If we fail to designate a good number of super-instances, unexpected results might occur. For instance, if we set the original number of super-instances to a number that is too small, we might get under clustering, where instances that are not supposed to be in the same group are clustered together. On the contrary, if we set the original number of super-instances to a number that is too big, we might get over clustering, where instances that are supposed to be in the same group are split away. As a result, getting a clustering of perfect granularity
 is not always the case in COBRA.
 
 COBRAS is designed to automatically form clusters of better granularity
-. It refines COBRA by giving chance to split super-instances after it is formed. The main difference between COBRAS and COBRA is that in COBRAS, even if instances that are not expected to be in the same cluster are merged in some phase, there still exists the chance for them to separate later. In other words, in COBRA there are only merging, but in COBRAS merging and splitting happen alternately, until the query budget is used up. Another important difference between COBRAS and COBRA is that in COBRAS there is no such need to set up an initial super-instance number, as COBRAS can decide it by itself. 
+. It refines COBRA by giving chance to split super-instances after it is formed. The main difference between COBRAS and COBRA is that in COBRAS, even if instances that are not expected to be in the same cluster are merged in some phase, there still exists the chance for them to separate later. In other words, in COBRA there are only merging, but in COBRAS merging and splitting happen alternately, until the query budget is used up. Another important difference between COBRAS and COBRA is that in COBRAS there is no such need to set up an initial number of super-instances, as COBRAS can decide it by itself. 
 
 \begin{algorithm}[h]
 	\caption{COBRAS}
@@ -244,7 +244,7 @@ A COBRAS procedure is elaborated in \fref{fig:cobras_procedure}. At the very beg
 
 The learning curve of COBRA and COBRAS are compared in \fref{fig:learning_curve_cobras}. For COBRA, when the number of super-instances is small, as shown in the orange curve, the clustering quality increases quickly at first but can only reach a suboptimal level. When the number of super-instances is big, as shown in the red curve, a relatively good clustering result is obtained in the end but it takes more queries to get this result. For COBRAS, as shown in the dotted blue curve, not only optimal clustering result is obtained in the end, but also the clustering performance is already high within fewer queries.  
 
-The clustering result of COBRA and COBRAS are compared in \fref{fig:result_cobras}. From left to right, results of CORBA with 10 initial super-instances, COBRA with 100 initial super-instances, COBRAS are shown. Dots having the same color are clustered into the same group. The difference between images on the upper layer and the lower layer is the query number that is used. We can see that both COBRA with 100 initial super-instances and CORBAS can obtain the perfect result in the end. However, COBRAS is more query-efficient as it obtains this result within 36 queries, while COBRA with 100 initial super-instances needs 103 queries. For COBRA with 10 initial super-instances, it stucks after 14 queries and ends in a suboptimal clustering. As we can see in the red circle, the yellow cluster has included a small part that is expected to be in the brown cluster, which is the phenomenon of under-clustering. In all, COBRAS beats COBRA for its ability to converge to high-quality clustering in a shorter time with fewer queries.  
+The clustering result of COBRA and COBRAS are compared in \fref{fig:result_cobras}. From left to right, results of CORBA with 10 initial super-instances, COBRA with 100 initial super-instances, COBRAS are shown. Dots having the same color are clustered into the same group. The difference between images on the upper layer and the lower layer is the number of queries that is used. We can see that both COBRA with 100 initial super-instances and CORBAS can obtain the perfect result in the end. However, COBRAS is more query-efficient as it obtains this result within 36 queries, while COBRA with 100 initial super-instances needs 103 queries. For COBRA with 10 initial super-instances, it stucks after 14 queries and ends in a suboptimal clustering. As we can see in the red circle, the yellow cluster has included a small part that is expected to be in the brown cluster, which is the phenomenon of under-clustering. In all, COBRAS beats COBRA for its ability to converge to high-quality clustering in a shorter time with fewer queries.  
 
 \begin{figure}
 	\centering
