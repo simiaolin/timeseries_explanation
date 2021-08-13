@@ -124,11 +124,7 @@ As can be seen from its name, DTW Barycenter Averaging (DBA) makes use of DTW. I
 		\REQUIRE $ \mathrm{C = <C_{1}, ...,C_{T^{'}} >}$ the initial average sequence
 		\ \REQUIRE $ \mathrm{S_1 = <S_{1_1}, ...,S_{1_T} >}$ the 1st sequence to average
 		
-		.
-		
-		.
-		
-		.
+		\vdots
 		
 		\REQUIRE$ \mathrm{S_n = <S_{n_1}, ...,S_{n_T} >}$ the nth sequence to average
 		\noindent	\STATE \textbf{Let} $  T $ be the length of the sequences
@@ -200,11 +196,24 @@ All of the above clustering methods produce very good clustering. Still, they ne
 
 
 \begin{algorithm}[h]
-	\caption{COBRA}
+	\caption{Constraint-based Repeated Aggregation \cite{vancraenendonck2018cobra}}
 	\label{algo:cobra}
 	\begin{algorithmic}[1]
-		
-		\STATE to be completed
+		\REQUIRE $\mathit{D}$ : a dataset, $\mathit{N_s}$ : the number of super-instances
+		\ENSURE a clustering of $\mathit{D}$ 
+		\STATE  Construct $\mathit{N_s}$ super-instances by over-clustering $\mathit{D}$  using K-means
+		\STATE  Initially, each (partial) cluster consists of a single super-instance
+		\WHILE  {the clustering changed}
+		\STATE Let $\mathit{L}$ be the list of all pairs of partial clusters between which the relation is not known yet, sorted by their pairwise distance
+		\FOR {$\mathit{P_1, P_2}$ $\in$ $\mathit{L}$}
+			\STATE Query the relation between partial clusters $\mathit{P_1}$  and $\mathit{P_2}$ 
+			\IF {a must-link relation is obtained}
+				\STATE merge $\mathit{P_1}$ and $\mathit{P_2}$  into a new partial cluster
+				\STATE break
+			\ENDIF
+		\ENDFOR
+		\ENDWHILE
+		\RETURN the current clustering
 	\end{algorithmic}
 \end{algorithm}
 
@@ -226,10 +235,22 @@ COBRAS is designed to automatically form clusters of better granularity
 . It refines COBRA by giving chance to split super-instances after it is formed. The main difference between COBRAS and COBRA is that in COBRAS, even if instances that are not expected to be in the same cluster are merged in some phase, there still exists the chance for them to separate later. In other words, in COBRA there are only merging, but in COBRAS merging and splitting happen alternately, until the query budget is used up. Another important difference between COBRAS and COBRA is that in COBRAS there is no such need to set up an initial number of super-instances, as COBRAS can decide it by itself. 
 
 \begin{algorithm}[h]
-	\caption{COBRAS}
+	\caption{Constraint-based Repeated Aggregation and Splitting \cite{van2018cobras}}
 	\label{algo:cobras}
+	 \hspace*{\algorithmicindent} \textbf{$\mathcal{X}$: a dataset, $\mathit{q}$: a query limit} \\
+	\hspace*{\algorithmicindent} \textbf{$\mathcal{C}$: a clustering of $\mathit{D}$} 
 	\begin{algorithmic}[1]
-		\STATE to be completed
+		\STATE  $\mathit{ML = \emptyset, CL = \emptyset}$
+		\STATE $\mathit{S}$ = \{$\mathcal{X}$\}, $\mathit{C = \{S\}}$, $\mathcal{C}$ = {$\mathit\{C\}$}
+		\WHILE {|$\mathit{ML}$| + |$\mathit{CL}$| < $\mathit{q}$}
+			\STATE $\mathit{S_{split}, C_{origin}} = \argmax_{\mathit{S \in C, C \in} \mathcal{C}} |\mathit{S}|$
+			\STATE $\mathit{k,ML,CL}$ = determineSplitLevel($\mathit{S_{split} , ML, CL}$)
+			\STATE $\mathit{S_{new_1}, ... , S_{new_k}}$ = K-means($\mathit{S_{split}, k}$)
+			\STATE $\mathit{C_{origin} = C_{origin}  \setminus \{S_{spit}\}}$
+			\STATE $\mathcal{C}$ = $\mathcal{C}$ $ \bigcup $\ \{\{$\mathit{S_{new_1}}$\}, ...,\{$\mathit{S_{new_k}}$\}\}
+			\STATE $\mathcal{C}$, $\mathit{ML, CL}$ = COBRA($\mathcal{C}$, $\mathit{ML, CL}$ )
+		\ENDWHILE 
+		\RETURN  C
 	\end{algorithmic}
 \end{algorithm}
 
