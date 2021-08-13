@@ -1,11 +1,22 @@
 \chapter{Explaining cluster membership }
 \label{cha:cluster_membership}
+Clustering is inherently subjective. We have introduced in \cref{sec:COBRA} that COBRA is a semi-supervised clustering method. It allows users to designate relation between instances to exploit expert knowledge. When presenting the clustering result to them, we should be able to convince them that their designation has been well applied and retained. 
 
-\section{relationship between super instances based on must and cannot links}
+COBRAS is a enhanced variant of CORBA that allows splitting on super-instances after they are formed to get clustering of better-granularity. $\mathrm{COBRAS^{TS}}$ is a time series variant of COBRAS. We are interested in explaining the cluster menbership of time series instances in $\mathrm{COBRAS^{TS}}$ because time series data are easier to visualize than other formats such as attribute-value pairs.
 
-\subsection{instances in one cluster}
-\subsection{instances in two clusters}
+Providing users the properties of clusters is a good way to help them build an overview of the clusters. However, if they are interested in more specific aspects, like why two sequences are clustered together, or why they are seperated from each other, the overall properties can do little. For instance in \cref{fig:mbs_ecg_circled}, looking at the sequences of the largest cluster of ECG dataset with a query budget of 100 in $\mathrm{COBRAS^{TS}}$, people would easily question why the blue sequences are in this cluster. There are obvious higher peaks with values around 3 at index around 92 in the blue sequences. However, there are neither such kind of high peaks in other sequences in the cluster nor in the DBA of this cluster. There is no such peak in the DBA because the number of blue sequences are not comparable to other sequences, so the peak information in hte blue sequences are lost in DBA because DBA is a weighted average. However,  That is the intention we propose in this section the membership of a sequence in one cluster. We mainly illustrates the membership of sequences with the help of must-links and cannot-links which have been introduced in \cref{sec:COBRA}.
+
+\begin{figure}[htbp]	
+	\centering
+	\includegraphics[width=\linewidth]{pics/membership/ecg_LINKS/cluster0_circled}
+	\caption{why these blue sequences are in the same cluster as other sequences?}
+	\label{fig:mbs_ecg_circled}
+\end{figure}
+
+
+\subsection{Instances in one cluster}
+\subsection{Instances in two clusters}
 \section{algorithm for readers to re-implement (pseudo code)}
-\section{result of experiments}
-\subsection{Cases on different datasets}
-\subsection{Cases on different queries}
+\section{Experiments}
+\subsection{Experiment on ECG dataset}
+\subsection{Experiment on Trace dataset}
