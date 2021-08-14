@@ -52,7 +52,9 @@ Secondly, connect each sequence to the representative of the super-instance it b
 
 Thirdly, for the representatives found in step one and step two that are in the same cluster, conduct BFS in the constraint pool and connect them with must-link chain. For instance, we find $\mathit{I_3}$ in $ \mathcal{C}_1 $ in step one and $\mathit{I_1}$ in $ \mathcal{C}_1 $ in step two, so we connect them using must-link chain $\mathit{I_1-I_2-I_3}$. Similarly, as we find $\mathit{I_4}$ in $ \mathcal{C}_2 $ in step one and $\mathit{I_5}$ in $ \mathcal{C}_2 $ in step two, we connect them using must-link chain $\mathit{I_4-I_5}$.
 
-Finally, combine all the must-links and cannot-link found above, we have constraint chain $\mathit{a-I_1-I_2-I_3-I_4-I_5-c}$, where except for $\mathit{I_3-I_4}$ all the constraints are must-links.
+Finally, combine all the must-links and cannot-link found above, we have constraint chain $\mathit{a-I_1-I_2-I_3-I_4-I_5-c}$, where $\mathit{I_3-I_4}$ shown in red dotted line is a cannot-link, and all the other constraints shown in green dotted lines are must-links.
+
+
 \begin{figure}[htbp]	
 	\centering
 	\includegraphics[width=\linewidth]{pics/membership/transitivity}
@@ -60,7 +62,52 @@ Finally, combine all the must-links and cannot-link found above, we have constra
 	\label{fig:transitivity}
 \end{figure}
 
-\section{algorithm for readers to re-implement (pseudo code)}
 \section{Experiments}
+We design an interactive system that allows users to designate the sequence ids of two sequences which they have interest in their relation. Every time they input two indices, we plot the constraint chain for them. Sequences with same color means there is a must-link between them except when they are two sequences at the begining or at the end of the constraint chain. In that case, there might not exist a must-link between them. Instead, they are in the same super-instance and one of them is the representative of the super-instance. There is a cannot-link between sequences which are located on the border where color changes. The datasets and configuration are the same as that of experiments in \cref{cha:properties_of_a_cluster}.
+
+
 \subsection{Experiment on ECG dataset}
+We first experimented with the ECG dataset, and we set the query budget of $ \mathrm{COBRAS^{TS}} $ to 100. 
+
+We are interested in why the blue sequence with a high peak with value around 3 at index around 92 could be clustered together with other sequences that do not have such a peak, so we provide the syetem the id of the blue sequence and the id of a sequence in the same cluster without such a peak, which are 125 and 66 respectively. The result is shown in \cref{fig:member_ml_ecg}. From bottom to top are the sequences in the computed constraint chain. The constrain link is $\mathit{66-78-125}$. We can now clearly knows that it is sequence of id 78 that links the sequence of id 125 with a high peak at the tail and the sequence of id 66 together into the same cluster.
+
+\begin{figure}[htbp]	
+	\centering
+	\includegraphics[width=\linewidth]{pics/membership/ecg_LINKS/ml_cluster0}
+	\caption{must-link chain in ECG}
+	\label{fig:member_ml_ecg}
+\end{figure}
+
+We are also interested in why two sequences are not clustered together. For example, we want to explore why sequence of id 84 and sequence of id 198 are in two clusters. We provide the ids to the system, and it shows us the result in \cref{fig:member_cl_ecg}. Here the sequences in red are in a same cluster, and sequences in green are in another cluster. The constraint link is $\mathit{84-63-143-125-198}$. Thers is a cannot-link between red sequence of id 143 and green sequence of id 125. Sequence of id 84 is linked to sequence of id 143 via must-links $\mathit{84-63-143}$, while sequence of id 198 is linked to sequence 125 via must-links $\mathit{198-125-143}$. 
+
+\begin{figure}[htbp]	
+	\centering
+	\includegraphics[width=\linewidth]{pics/membership/ecg_LINKS/cl_1_and_0}
+	\caption{must-link and cannot-link chain in ECG}
+	\label{fig:member_cl_ecg}
+\end{figure}
+
+
 \subsection{Experiment on Trace dataset}
+We also experimented on the Trace dataset, and we set the query budget of $ \mathrm{COBRAS^{TS}} $ to 100. 
+
+In \cref{fig:member_ml_trace}, we can see that sequece of id 55 is in the same cluster with sequence of id 115 because of the must-links $\mathit{55-173-115}$. 
+
+In \cref{fig:member_cl_trace}, we can see that seqeucne of id 143 and sequece of id 115 are in two different clusters because of the constraint chain $\mathit{143-95-10-174-135-88-115}$, where $\mathit{174-135}$ is a cannot-link.
+
+\begin{figure}[htbp]	
+	\centering
+	\includegraphics[width=\linewidth]{pics/membership/trace_links/must}
+	\caption{must-link chain in Trace}
+	\label{fig:member_ml_trace}
+\end{figure}
+
+\begin{figure}[htbp]	
+	\centering
+	\includegraphics[width=\linewidth]{pics/membership/trace_links/cannot}
+	\caption{must-link and cannot-link chain in Trace}
+	\label{fig:member_cl_trace}
+\end{figure}
+
+\section{conclusion}
+In this chapter, we propose a new way to solve the doubt in last chapter that why two sequences are in the same cluster, or why they are in different clusters. We solve in a way making good use of the obtained constraint in the process the $\mathrm{COBRAS^{TS}}$. Our system provides users the chance to look at the clustering result of $\mathrm{COBRAS^{TS}}$ in a more specific perspective. More importantly, we can convince users that their expert knowledge is truly and well obtained and exploited in $\mathrm{COBRAS^{TS}}$. 
