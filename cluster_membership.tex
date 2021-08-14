@@ -30,7 +30,7 @@ In \cref{fig:entailment}, we have one cluster $ \mathcal{C}_1 $. In $ \mathcal{C
 
 Firstly, connect each sequence to the representative of the super-instance it belongs to. If the sequence itself is already the representative of the super-instance, skip this step. For instance in \cref{fig:entailment}, we would first find the representatives of the super-instances that $\mathit{a}$ and $\mathit{b}$ belong to. Sequence $\mathit{a}$ belongs to super-instance $\mathit{S_1}$, and the representative of $\mathit{S_1}$ is $\mathit{I_1}$, so we connect $\mathit{a}$ to $\mathit{I_1}$. Similarly, we also connect $\mathit{b}$ to $\mathit{I_3}$
 
-Secondly, connect the representatives with the must-links in the constraint pool. In this example, we are trying to connect $\mathit{I_1}$ and $\mathit{I_3}$. We can see that there is a sequece $\mathit{I_2}$ which is the representative of super-instance $\mathit{S_2}$, and $\mathit{S_2}$ is also in the cluster $ \mathcal{C}_1 $. Besides, there is a must-link between $\mathit{I_1}$ and $\mathit{I_2}$, and there is also a must-link between $\mathit{I_2}$ and $\mathit{I_3}$. Therefore, we can connect $\mathit{I_1}$ and $\mathit{I_3}$ by first connecting $\mathit{I_1}$ and $\mathit{I_2}$ and then connecting $\mathit{I_2}$ and $\mathit{I_3}$. 
+Secondly, connect the representatives with the must-links in the constraint pool. We conduct breadth first seacrh (BFS) among the must-links to find the must-link chain between two representatives. In this example, we are trying to connect $\mathit{I_1}$ and $\mathit{I_3}$. We can see that there is a sequece $\mathit{I_2}$ which is the representative of super-instance $\mathit{S_2}$, and $\mathit{S_2}$ is also in the cluster $ \mathcal{C}_1 $. Besides, there is a must-link between $\mathit{I_1}$ and $\mathit{I_2}$, and there is also a must-link between $\mathit{I_2}$ and $\mathit{I_3}$. Therefore, we can connect $\mathit{I_1}$ and $\mathit{I_3}$ by first connecting $\mathit{I_1}$ and $\mathit{I_2}$ and then connecting $\mathit{I_2}$ and $\mathit{I_3}$. 
 
 Finally, combing all the must-links selected above, we can connect $\mathit{a}$ and $\mathit{b}$ in a must-link chain $\mathit{a-I_1-I_2-I_3-b}$, which is shown as green dotted lines in \cref{fig:entailment}. 
 
@@ -40,7 +40,26 @@ Finally, combing all the must-links selected above, we can connect $\mathit{a}$ 
 	\caption{why two sequences are in one cluster?}
 	\label{fig:entailment}
 \end{figure}
+
 \subsection{Instances in two clusters}
+As for two sequences in different clusters, we can slightly change the way we find the must-link chain above to explain why they are in two clusters. As long as the query budget is adequate, there is only one reason that two clustered are not merged together - there exists at least one cannot-link between these two clusters. Combining this cannot-link together with the must-links inside two clusters, we can get a constraint chain that can explain why two sequences are separated in two clusters. We illustrate it together with an example in \cref{fig:transitivity}.
+
+In \cref{fig:transitivity} there are two clusters, $ \mathcal{C}_1 $ and $ \mathcal{C}_2 $. $ \mathcal{C}_1 $ is just the same cluster in \cref{fig:entailment}, $ \mathcal{C}_2 $ contains two super-instances, $\mathit{S_4}$ and $\mathit{S_5}$ repectively. $\mathit{I_4}$ is the representative of $\mathit{S_4}$, and $\mathit{I_5}$ is the representative of $\mathit{S_5}$. $\mathit{c} $ is a sequence in $\mathit{S_5}$. We are interested in why sequence $\mathit{a}$ and $\mathit{c}$ are not in the same cluster.
+
+Firstly, find which two clusters the two target sequences are grouped into, then find a cannot-link between two clusters. Specifically, find a cannot-link between two super-instances which belong to two clusters respectively. More specifically, find a cannot-link between two representatives of two super-instances which belong to two clusters respectively. There might exists more than one such cannot-link, we just randomly pick one. In this case, a cannot-link between $\mathit{I_3}$ and $\mathit{I_4}$ satisfies our requirement as $\mathit{I_3}$ is the representative of super-instance $\mathit{S_3}$ in cluster $ \mathcal{C}_1 $, while $\mathit{I_4}$ is the representative of super-instance $\mathit{S_4}$ in cluster  $ \mathcal{C}_2 $. 
+
+Secondly, connect each sequence to the representative of the super-instance it belongs to. If the sequence itself is already the representative of the super-instance, skip this step. In this case, we connect $\mathit{a}$ to $\mathit{I_1}$, and connect $\mathit{c}$ to $\mathit{I_5}$.
+
+Thirdly, for the representatives found in step one and step two that are in the same cluster, conduct BFS in the constraint pool and connect them with must-link chain. For instance, we find $\mathit{I_3}$ in $ \mathcal{C}_1 $ in step one and $\mathit{I_1}$ in $ \mathcal{C}_1 $ in step two, so we connect them using must-link chain $\mathit{I_1-I_2-I_3}$. Similarly, as we find $\mathit{I_4}$ in $ \mathcal{C}_2 $ in step one and $\mathit{I_5}$ in $ \mathcal{C}_2 $ in step two, we connect them using must-link chain $\mathit{I_4-I_5}$.
+
+Finally, combine all the must-links and cannot-link found above, we have constraint chain $\mathit{a-I_1-I_2-I_3-I_4-I_5-c}$, where except for $\mathit{I_3-I_4}$ all the constraints are must-links.
+\begin{figure}[htbp]	
+	\centering
+	\includegraphics[width=\linewidth]{pics/membership/transitivity}
+	\caption{why two sequences are in different clusters?}
+	\label{fig:transitivity}
+\end{figure}
+
 \section{algorithm for readers to re-implement (pseudo code)}
 \section{Experiments}
 \subsection{Experiment on ECG dataset}
