@@ -182,11 +182,11 @@ COBRA \cite{vancraenendonck2018cobra} is a constraint-based semi-supervised clus
 
 Suppose we have $  N$ instances, to get the relation between all the instance pairs we need $N*(N-1)/2$ queries, so the number of queries increases exponentially as the instance number grows. We can reduce the number of queries by introducing \textit{constraint entailment and transitivity}.  Must-link constraints are transitive:
 
-\begin{center}$must-link(A, B) \wedge must-link(B, C) \Rightarrow must-link(A, C)$\end{center}
+\begin{center}$must-link(A, B) \wedge must-link(B, C) \Rightarrow must-link(A, C)$\end{center} \label{cobra:entailment}
 
 \noindent ,and cannot-link constraints have entailment property:
 
-\begin{center}$must-link(A, B) \wedge cannot-link(B, C) \Rightarrow cannot-link(A, C)$\end{center}
+\begin{center}$must-link(A, B) \wedge cannot-link(B, C) \Rightarrow cannot-link(A, C)$\end{center} \label{cobra:transitivity}
 
 \noindent As a result, whenever we get a constraint, we can apply the constraint entailment and transitivity to enlarge the constraint set. In this case, we can decrease the number of queries.
 
