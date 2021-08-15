@@ -1,4 +1,4 @@
-\documentclass[master=mai,masteroption=bda]{kulemt}
+\documentclass[master=mai,masteroption=bda,oneside]{kulemt}
 \setup{% Remove the "%" on the next line when using UTF-8 character encoding
 	%inputenc=utf8,
 	title={Explaining time series clusters},
@@ -24,7 +24,7 @@
 \usepackage{algorithmic}
 \usepackage{multirow}
 \usepackage{amsmath} 
-\usepackage{cleveref}
+\usepackage[capitalise]{cleveref}
 \DeclareMathOperator*{\argmax}{argmax} % thin space, limits underneath in displays
 
 %%%%%%%
@@ -57,21 +57,24 @@
 	\begin{abstract}
 		%An important aspect of applying machine learning models to real-world use cases is interpretability. These novel features need to be explained or shown to domain experts. In this thesis we make use of the DTW (Dynamic Time Warping) distance measure, DBA (DTW barycenter averaging), and constraints from $ \mathrm{COBRAS^{TS}} $ to summarize why a set of time series are clustered together and how one cluster differs from other clusters. 
 		
-		In semi-supervised machine learning (ML) techniques, expert feedback is leveraged, but the result is often not interpretable and is hard to be evaluated by an expert. There are large datasets where it is possible to apply such ML techniques thanks to the increasing computational power of computers, but it becomes even more difficult to interpret results for such large datasets. Time series can be represented visually and hence advantageous over other formats such as attribute-value pairs, so it is quite valuable to have interpretable results for time series. This is especially important for semi-supervised systems because the expert who contributes to the result might want to evaluate it as well. 
 		
-		In this thesis, we focus on the interpretability and explainability of the semi-supervised clustering of time series. We employ the most query-efficient technique to date, Constraint-based Repeated Aggregation and Splitting for Time Series ($ \mathrm{COBRAS^{TS}} $), which has been developed by the DTAI research group at KU Leuven. $ \mathrm{COBRAS^{TS}} $ exploits expert knowledge by querying users' constraints between pairs of time series instances. $ \mathrm{COBRAS^{TS}} $ iteratively aggregates and splits super-instances to obtain a clustering of fine granularity. As for measuring similarity between time series instances, Dynamic Time Warping (DTW) is chosen. Unlike Euclidean distance, which strictly abides by the time axis, DTW finds the best alignment between two time series instances by warping and computes their distance based on it. DTW itself has good explanation ability thanks to the fact that the warping process is recorded. As for the averaging in time series data, DTW Barycenter Averaging (DBA) is chosen as it can capture the most important trend of instances, while in the arithmetic mean characteristics of the original instances are averaged in the time axis and the information about peaks and troughs are blurred. 
-		
-		As distance measure and averaging are different in time series data, the traditional deviation method doesn't work well for them. We propose in this thesis new types of deviations for time series instances, warped horizontal deviation, and warped vertical deviation respectively, and illustrate how warped horizontal deviation is sacrificed to get smaller warped vertical deviation inside a cluster. We also propose a way to connect the essential constraints provided by users to show why two time series instances are clustered together, or vice versa.
-		
-		
+In semi-supervised machine learning (ML) techniques, expert feedback is leveraged, but the result is often not interpretable and is hard to be evaluated by an expert. There are large datasets where it is possible to apply such ML techniques thanks to the increasing computational power of computers, but it becomes even more difficult to interpret results for such large datasets. Time series can be represented visually and hence advantageous over other formats such as attribute-value pairs, so it is quite valuable to have interpretable results for time series. This is especially important for semi-supervised systems because the expert who contributes to the result might want to evaluate it as well. 
+
+In this thesis, we focus on the interpretability and explainability of the semi-supervised clustering of time series. We employ the most query-efficient technique to date, Constraint-based Repeated Aggregation and Splitting for Time Series ($ \mathrm{COBRAS^{TS}} $), which has been developed by the DTAI research group at KU Leuven. $ \mathrm{COBRAS^{TS}} $ exploits expert knowledge by querying users' constraints between pairs of time series instances. $ \mathrm{COBRAS^{TS}} $ iteratively aggregates and splits super-instances to obtain a clustering of fine granularity. $ \mathrm{COBRAS^{DTW}} $ is one of the implementations of $ \mathrm{COBRAS^{TS}} $ that uses Dynamic Time Warping (DTW) to measure similarity between time series instances. Unlike Euclidean distance, which strictly abides by the time axis, DTW finds the best alignment between two time series instances by warping and computes their distance based on it. DTW itself has good explanation ability thanks to the fact that the warping process is recorded. We also select DTW Barycenter Averaging (DBA) as the averaging method on time series data as it can capture the most important characteristic of time series instances, such as trends, peaks, and troughs, etc. Throughout the thesis, we mainly focus on explaining the clustering result of $ \mathrm{COBRAS^{DTW}} $. 
+
+We propose in this thesis two new ways of interpreting the clustering result of $ \mathrm{COBRAS^{TS}} $. The first one is to provide users an overview of the clustering by showing the main properties of the clusters such as DBA and our newly proposed warping deviations in the context of time series. In this way, we can help users build a general and intuitive understanding of the clustering result. The second one is proposed to answer more specific questions such as why two time series data are in the same cluster or the different clusters. We chain two sequences that users have interest in with the constraints obtained in the process of $ \mathrm{COBRAS^{TS}} $. In this way, users can look into the clustering result from a more detailed perspective. 
+
+		 
+
+	\par \textbf{Keywords: explainability, $ \mathrm{COBRAS^{TS}} $, DBA, DTW} 
 	\end{abstract} 
 	
 	% A list of figures and tables is optional
-	%\listoffigures
+	\listoffigures
 	%\listoftables
 	% If you only have a few figures and tables you can use the following instead
 	
-	\listoffiguresandtables
+	%\listoffiguresandtables
 	% The list of symbols is also optional.
 	% This list must be created manually, e.g., as follows:
 	\chapter{List of Abbreviations and Symbols}
@@ -86,6 +89,8 @@
 			COBRA    & Constraint-based Repeated Aggregation \\
 			COBRAS     & Constraint-based Repeated Aggregation and Splitting \\
 			$ \mathrm{COBRAS^{TS} }$    & Constraint-based Repeated Aggregation and Splitting for Time Series\\
+				COBRAS     & Constraint-based Repeated Aggregation and Splitting \\
+			$ \mathrm{COBRAS^{DTW} }$    & Constraint-based Repeated Aggregation and Splitting for Time Series using DTW as distance measure\\
 		\end{tabularx}
 	\end{flushleft}
 	\iffalse
