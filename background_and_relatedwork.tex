@@ -180,7 +180,7 @@ As we can see from \fref{fig:arithmetic} and \fref{fig:dba} \cite{dta_vs_arithme
 \section{Semi supervised time series clustering methods}
 
 \subsection{Semi-supervised learning}
-In supervised learning, we have the labels of all the instances. It enjoys the clarity of data and is easy to train. However, labeling all the data is not a trivial task, and sometimes it is not easy or even impossible to get the labels of data.
+In supervised learning, we have the labels of all the instances. It enjoys the clarity of data and is easy to train. However, labeling all the data is not a trivial task, and sometimes it is not easy or even impossible to get the labels of data \cite{saxena2017review}. 
 
 In unsupervised learning, no data is labeled, and algorithms are expected to find patterns on these unlabeled data. It saves the effort of collecting the labels of data. However, it can not reflect any users' expert knowledge.
 
@@ -306,7 +306,45 @@ We had discussed COBRAS's ability to obtain perfect clustering efficiently as a 
 %	\end{algorithmic}
 %\end{algorithm}
 
-\section{Explanation of clustering}
+\FloatBarrier
+\section{Literature review on the explanation of time series clustering}
+We also do a literature review on the explanation of time series clustering. 
+
+In \cite{van1999cluster} Neth. Energy Research Foundation (ECN) proposed a calendar view of the clustering of the power demand of ECN in 1988. One the right of \cref{fig:power_demand_by_ecn} is the average sequence per cluster, showing the demand of power at different times of a day. On the left of \cref{fig:power_demand_by_ecn} there is a calendar, and each day in it has the same color as the cluster it belongs to. For instance, dates with dark blue color in the calendar are mainly weekends, and the average sequence in dark blue shows low power demand throughout the whole day. It indicates that the power demand in ECN is low on weekends in 1988, which is in line with common sense.
+The calendar view of the clustering result is very clear and easy to understand. However, it is a method well designed for the calendar-based time series data and thus is not that general. Even though, its idea of representing a cluster with its average sequence is worthy of reference.
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=0.95\textwidth]{pics/related_work/power_demand_by_ecn}
+	\caption{Calendar view of the power demand in Neth. Energy Research Foundation (ECN) in 1988 \cite{van1999cluster}}
+	\label{fig:power_demand_by_ecn}
+\end{figure}
+
+
+
+\FloatBarrier
+Changing time series to other forms is also a popular way of interpreting time series instances. In \cref{fig:gene_bitmap} \cite{kumar2005time} the gene sequences of mitochondrial DNA of four animals are transformed into bitmaps. The more similar the bitmaps are, the more similar the gene sequences are. The top one on the left is the gene bitmap of chimpanzees, while the bottom one on the left is the gene of humans. The top one on the right is the gene bitmap of Indian elephants, while the bottom one on the right is that of Africa elephants. We can see that the left two are similar, and the right two are similar, which illustrates the fact that humans are similar to chimpanzees, while Indian elephants are similar to Africa elephants. Transforming time series into bitmap is especially useful for long and discrete sequences because it provides a nice way of viewing the sequences. However, for time series data that are already visualization friendly, there is no need to add the burden of transforming them into other forms. 
+
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=0.6\textwidth]{pics/related_work/gene_sequence}
+	\caption{The gene sequences of mitochondrial DNA of four animals \cite{kumar2005time}}
+	\label{fig:gene_bitmap}
+\end{figure}
+
+
+\FloatBarrier
+Explaining the clustering results hierarchically is quite popular \cite{kumar2005time,sulistiovizts}. The example in \cref{fig:hierarchy_and_bitmap} is quite intuitive.  The most similar sequences are linked in the left-most layer, and step by step forming the hierarchy through linking on top of the linked sequences. Actually, it is similar to the merging step of $ \mathrm{COBRAS^{TS}} $. However, it can not display the constraints obtained during $ \mathrm{COBRAS^{TS}} $ such as must-links and cannot-links. In $ \mathrm{COBRAS^{TS}} $, two sequences that are in the same cluster might not have high similarity in terms of distance. They might be in the same cluster because of a must-link provided by users, which is the expert knowledge that is subjective and hard to find a criterion to measure. Even though, it gives us an insight into linking sequences to illustrate their relation.
+
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=0.6\textwidth]{pics/related_work/hierarchy_and_bitmap}
+	\caption{An example of explaining time series clustering in a hierarchical way \cite{kumar2005time}}
+	\label{fig:hierarchy_and_bitmap}
+\end{figure}
+
 
 %%% Local Variables: 
 %%% mode: latex
