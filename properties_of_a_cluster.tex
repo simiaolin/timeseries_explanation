@@ -3,7 +3,7 @@
 Given a time series clustering obtained by $ \mathrm{COBRAS^{TS}} $, we are interested in interpretable properties for each cluster. In the context of time series, such properties could be the average, deviation, peaks and troughs, etc. Average is the most important characteristic. As for it, we have introduced DTW Barycenter Average (DBA), a global averaging method that can retain the important trends of the time series. The deviation is used to describe the deviation of sequences from the average. The traditional standard deviation no longer works well because neither the distance measure throughout $ \mathrm{COBRAS^{TS}} $ nor DBA is based on the Euclidean distance. Inspired by the DBA, we propose warping deviations that are specifically designed for time series. 
 
 \section{Warping deviation}
-Before introducing the warping deviation, let's first look back how the time series average is obtained in DBA. In \cref{fig:prop_dba} there are three sequences, S, Q and Avg, where Avg is the DBA of S and Q. Specifically, coordinate $ \mathrm{Avg_9} $ is associated with coordinates $ \mathrm{S_5} $, $ \mathrm{S_6} $ and $ \mathrm{S_7} $ in S, and coordinate $ \mathrm{Q_10} $ in Q. Remember the Barycenter Algorithm in \cref{algo:barycenter}, we have:
+Before introducing the warping deviation, let's first look back how the time series average is obtained in DBA. In \cref{fig:prop_dba_and_tra_var}b there are three sequences, S, Q and Avg, where Avg is the DBA of S and Q. Specifically, coordinate $ \mathrm{Avg_9} $ is associated with coordinates $ \mathrm{S_5} $, $ \mathrm{S_6} $ and $ \mathrm{S_7} $ in S, and coordinate $ \mathrm{Q_10} $ in Q. Remember the Barycenter defined in \cref{algo:barycenter}, we have:
 
 \begin{center}
 	$ \mathrm{Avg_9 = \frac{S_5 + S_6 + S_7 + Q_{10}}  {4}}  $
@@ -11,7 +11,15 @@ Before introducing the warping deviation, let's first look back how the time ser
 
 Traditionally, given sequences and their average, standard deviation of each coordinate in the DBA is calculated as below. However, this has several problems in the context of time series. First of all, there is no guarantee that all the sequences have the same length. Even if all the sequences were of the same length, there is still no guarantee that DBA shares the same length with the sequences. It is recommended that DBA has the same length as the sequences, but it is not a must. If the sequences and DBA don't have the same length, it is impossible to calculate standard deviations for all the coordinates of the DBA.
 
-Suppose the length requirements are satisfied, there still exists big problems standard deviation. In \cref{fig:prop_tra_var}, we can see that when calculating the standard deviation for the the $ 9th $ coordinate in the average sequence Avg, which is $ \mathrm{Avg_9} $, we refer to the $ 9th $ coordinates in sequences S and  Q, which are $ \mathrm{S_9} $ and $ \mathrm{Q_9} $, respectively. Indeed, $ \mathrm{Avg_9} $ is aligned with $ \mathrm{S_9} $ and $ \mathrm{Q_9} $ in the time axis, but in the context of DTW it is aligned with $ \mathrm{S_5} $, $ \mathrm{S_6} $, $ \mathrm{S_7} $ and $ \mathrm{Q_{10}} $, which is shown in \cref{fig:prop_dba}. DTW is applied not only in $ \mathrm{COBRAS^{TS}} $ but also in $ \mathrm{DBA} $. To better reflect the alignments in DTW, we slightly change the definition of standard deviation and propose \textbf{warping deviation} that can capture the warping information. 
+Suppose the length requirements are satisfied, there still exists big problems standard deviation. In \cref{fig:prop_dba_and_tra_var}a, we can see that when calculating the standard deviation for the the $ 9th $ coordinate in the average sequence Avg, which is $ \mathrm{Avg_9} $, we refer to the $ 9th $ coordinates in sequences S and  Q, which are $ \mathrm{S_9} $ and $ \mathrm{Q_9} $, respectively. Indeed, $ \mathrm{Avg_9} $ is aligned with $ \mathrm{S_9} $ and $ \mathrm{Q_9} $ in the time axis, but in the context of DTW it is aligned with $ \mathrm{S_5} $, $ \mathrm{S_6} $, $ \mathrm{S_7} $ and $ \mathrm{Q_{10}} $, which is shown in \cref{fig:prop_dba_and_tra_var}b. DTW is applied not only in $ \mathrm{COBRAS^{TS}} $ but also in $ \mathrm{DBA} $. To better reflect the alignments in DTW, we slightly change the definition of standard deviation and propose \textbf{warping deviation} that can capture the warping information. 
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=\linewidth]{pics/properties/tra_var_and_dba}
+	\caption{Association of coordinates from sequences to a coordinate of average}
+	\label{fig:prop_dba_and_tra_var}
+	
+\end{figure}
 
 More details about warping deviation are shown in \cref{algo:warping_deviation}. The main difference between the warping deviation and traditional unwarping deviation is the selection of coordinates that are used to compare with the coordinates in DBA. In traditional unwarping deviation \cref{algo:unwarping_deviation}, for each coordinate $ C_i $ with index $ i $ in DBA, those coordinates in sequences in the same time axis $ S_{1_i}, S_{2_i}, ...,S_{n_i} $ as are chosen. In our newly proposed warping deviation, for each coordinate $ C_i $ in DBA, those coordinates in sequences that are warped to $ C_i $ in DTW are chosen.
 
@@ -100,25 +108,8 @@ Correspondingly in the algorithm, we have $ assocY[i] $, which are the values in
 	\end{algorithmic}
 \end{algorithm}
 
-\begin{figure}[htbp]
-	\centering
-	\begin{minipage}[t]{0.48\textwidth}
-		
-		\centering
-		\includegraphics[width=\linewidth]{pics/properties/dba}
-		\caption{Association of coordinates from sequences to a coordinate of average}
-		\label{fig:prop_dba}
-	\end{minipage}
-	
-	\begin{minipage}[t]{0.48\textwidth}
-		\centering
-		\includegraphics[width=\linewidth]{pics/properties/tra_var}
-		\caption{Standard deviation}
-		\label{fig:prop_tra_var}
-	\end{minipage}
-	
-\end{figure}
 
+\FloatBarrier
 \section{Datasets}
 The datasets used in this thesis are from the UCR Time Series Classification Archive \cite{UCRArchive2018}. It is introduced in 2002 and has become an important resource in the context of time series. It is used to verify that DTW has greater ability than Euclidean distance in terms of measuring similarity between time series data. Up to now, there are 128 time series datasets in the UCR Archive, and for each dataset, all the time series are labeled. As a result, they are suitable for training classification or clustering problems. That is the reason we choose datasets from the UCR Archive.
 
@@ -145,14 +136,10 @@ The experiment procedure is designed as below. \cref{fig:properties_process} sho
 	
 \end{figure}
 
+\FloatBarrier
 \subsection{Experiment on ECG dataset}
 We experimented with the ECG dataset, and we set the query budget of $ \mathrm{COBRAS^{TS}} $ to 100. To explain the cluster properties, we select the cluster with the largest number of time series instances. We plot the DBA and all the instances of the selected cluster in \cref{fig:instances_and_dba}. We can see that DBA can capture the main trend of the instances. Still, some dark blue sequences which have a high peak at the end don't seem similar to other red or orange sequences which have earlier and lower peaks. Furthermore, the peak information of the blue sequences seems lost in the DBA. We will explain more later, and for now, we just keep going on explaining the properties of the cluster.
 
-With the DBA and the instances, we then compute three types of deviations, and they are shown in \cref{fig:three_deviation}. Thinking about the characteristic of DTW, it is no wonder that the vertical warping deviation (the pink curve in the left image) is smaller than the traditional unwarping deviation (the grey curve in the middle image). DTW warps sequences in the X-axis (time axis) to decrease their differences in the Y-axis (value axis), so the vertical warping deviation is smaller. Though DTW decreases the vertical warping deviation, the gain comes with loss. The horizontal warping deviation (green curve in the right image) is much bigger. This is consistent with the fact that DTW sacrifices the deviation on the time axis.
-
-At around 40 on the time axis, the horizontal warping deviation is large, so there is a lot of variation in the time axis for this part. This indicates that the transition around the time of 40 can occur at different times in this cluster. On the other hand, the vertical warping deviation is small, so the amplitude does not change significantly.
-
-To combine the DBA and two types of warping deviations, we introduce \textbf{deviation eclipse}. For each coordinate in the DBA, we surround it with an eclipse, where the height of the eclipse is set to be the vertical warping deviation, and the width of the eclipse is set to be the horizontal warping deviation. The wider the eclipse is, the larger the horizontal warping deviation is for the corresponding coordinate. The taller the eclipse is, the larger the vertical warping deviation.
 
 \begin{figure}[htbp]	
 	\centering
@@ -161,12 +148,21 @@ To combine the DBA and two types of warping deviations, we introduce \textbf{dev
 	\label{fig:instances_and_dba}
 \end{figure}
 
-\begin{figure}[htbp]
+\FloatBarrier
+With the DBA and the instances, we then compute three types of deviations, and they are shown in \cref{fig:three_deviation}. Thinking about the characteristic of DTW, it is no wonder that the vertical warping deviation (the pink curve in the left image) is smaller than the traditional unwarping deviation (the grey curve in the middle image). DTW warps sequences in the X-axis (time axis) to decrease their differences in the Y-axis (value axis), so the vertical warping deviation is smaller. Though DTW decreases the vertical warping deviation, the gain comes with loss. The horizontal warping deviation (green curve in the right image) is much bigger. This is consistent with the fact that DTW sacrifices the deviation on the time axis.
+
+At around 40 on the time axis, the horizontal warping deviation is large, so there is a lot of variation in the time axis for this part. This indicates that the transition around the time of 40 can occur at different times in this cluster. On the other hand, the vertical warping deviation is small, so the amplitude does not change significantly.
+
+
+\begin{figure}[!htbp]
 	\centering
 	\includegraphics[width=\linewidth]{pics/properties/ecg/cluster_0_deviation_new}
 	\caption{(a) Vertical Warping Deviation (b) Standard Deviation (c) Horizontal Warping Deviation [dataset: ECG]}
 	\label{fig:three_deviation}
 \end{figure}
+
+\FloatBarrier
+To combine the DBA and two types of warping deviations, we introduce \textbf{deviation eclipse}. For each coordinate in the DBA, we surround it with an eclipse, where the height of the eclipse is set to be the vertical warping deviation, and the width of the eclipse is set to be the horizontal warping deviation. The wider the eclipse is, the larger the horizontal warping deviation is for the corresponding coordinate. The taller the eclipse is, the larger the vertical warping deviation.
 
 \begin{figure}[htbp]
 	\centering
@@ -175,6 +171,7 @@ To combine the DBA and two types of warping deviations, we introduce \textbf{dev
 	\label{fig:dba_and_warpingdeviations}
 \end{figure}
 
+\FloatBarrier
 \subsection{Experiment on Trace dataset}
 We also experimented on the Trace dataset with a query budget of 100. The length of sequences in the Trace dataset is 275, almost three times that of the ECG dataset, which is 96. Both datasets contain 200 instances, but it takes much longer to complete the experiment on Trace. There are four clusters, and all of them have good cohesion. In other words, the sequences in each cluster look rather similar. We select one of the four to show the properties. 
 
@@ -201,6 +198,6 @@ We can see that in \cref{fig:instances_and_dba_trace} the DBA can well capture t
 	\label{fig:dba_and_warpingdeviations_trace}
 \end{figure}
 
-
+\FloatBarrier
 \section{Conclusion}
 So far we have introduced the newly proposed warping deviations, compare them with the traditional unwarping deviation, and shows them in the form of a curve as well as eclipses around the DBA curve. They can give users an intuitive way of looking into each cluster. However, users might be still interested in why two sequences are clustered in the same group, such as the doubts we raised in the experiment on the ECG dataset. Users might also have an interest in why two sequences are clustered in two different groups. Only explaining the properties of clusters can not answer these problems. We will look into more about the $ \mathrm{COBRAS^{TS}} $ and solve these doubts.
