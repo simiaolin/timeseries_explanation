@@ -130,8 +130,8 @@ We select \textbf{ECG} and \textbf{Trace} to experiment because the lengths of t
 \section{Experiments}
 The experiment procedure is designed as below. \cref{fig:properties_process} shows the flow of the experiment.
 \begin{enumerate} 
-	\item Perform $ \mathrm{COBRAS^{TS}} $ on the whole dataset and obtain the clustering result. We mock the query part by getting constraints from the labels of the instances. If the labels of two instances are the same, we suppose there is a must-link between them. On the contrary, if the labels of two instances are different, we suppose there is a cannot-link between them. After obtaining the clustering result, select one cluster of interest at a time in to explain its properties.
-	\item Compute the DBA of the sequences in the selected cluster, which is shown in the purple arrow.
+	\item Perform $ \mathrm{COBRAS^{TS}} $ on the whole dataset and obtain the clustering result. We mock the query part by getting constraints from the labels of the instances. If the labels of two instances are the same, we suppose there is a must-link between them. On the contrary, if the labels of two instances are different, we suppose there is a cannot-link between them. After obtaining the clustering result, select one cluster of interest at a time to explain its properties.
+	\item Compute the DBA of the sequences in the selected cluster, which is shown in the purple arrow in \cref{fig:properties_process} .
 	\item Based on DBA and the sequences, compute the vertical warping deviation, which is shown in the pink arrows. Similarly, compute the horizontal warping deviation, which is shown in green arrows. 
 	We also compute the traditional unwarping deviation, but it is not shown in \cref{fig:properties_process} because it is relatively irrelevant. We still compute it as we want to compare the vertical warping deviation to see the difference, and we show it in \cref{fig:three_deviation} and \cref{fig:three_deviation_trace}.
 	\item Show DBA together with warping deviations. Specifically, surround each coordinate of DBA with an eclipse with a width of the corresponding horizontal warping deviation and a height of the corresponding vertical warping deviation. This step is shown in blue arrows. 
@@ -150,20 +150,20 @@ We experimented with the ECG dataset, and we set the query budget of $ \mathrm{C
 
 With the DBA and the instances, we then compute three types of deviations, and they are shown in \cref{fig:three_deviation}. Thinking about the characteristic of DTW, it is no wonder that the vertical warping deviation (the pink curve in the left image) is smaller than the traditional unwarping deviation (the grey curve in the middle image). DTW warps sequences in the X-axis (time axis) to decrease their differences in the Y-axis (value axis), so the vertical warping deviation is smaller. Though DTW decreases the vertical warping deviation, the gain comes with loss. The horizontal warping deviation (green curve in the right image) is much bigger. This is consistent with the fact that DTW sacrifices the deviation on the time axis.
 
-At around 40 on the time axis, the horizontal warping deviation is large, so there is a lot of variation in the time axis for this part. This indicates that the transition around the time of 40 can occur at dfferent times in this cluster. On the other hand, the vertical warping deviation is small, so the amplitude does not change significantly.
+At around 40 on the time axis, the horizontal warping deviation is large, so there is a lot of variation in the time axis for this part. This indicates that the transition around the time of 40 can occur at different times in this cluster. On the other hand, the vertical warping deviation is small, so the amplitude does not change significantly.
 
 To combine the DBA and two types of warping deviations, we introduce \textbf{deviation eclipse}. For each coordinate in the DBA, we surround it with an eclipse, where the height of the eclipse is set to be the vertical warping deviation, and the width of the eclipse is set to be the horizontal warping deviation. The wider the eclipse is, the larger the horizontal warping deviation is for the corresponding coordinate. The taller the eclipse is, the larger the vertical warping deviation.
 
 \begin{figure}[htbp]	
 	\centering
-	\includegraphics[width=\linewidth]{pics/properties/ecg/cluster0_dba}
+	\includegraphics[width=\linewidth]{pics/properties/ecg/cluster_0_dba_new}
 	\caption{(a) DBA (b) instances [dataset: ECG]}
 	\label{fig:instances_and_dba}
 \end{figure}
 
 \begin{figure}[htbp]
 	\centering
-	\includegraphics[width=\linewidth]{pics/properties/ecg/cluster0_deviation}
+	\includegraphics[width=\linewidth]{pics/properties/ecg/cluster_0_deviation_new}
 	\caption{(a) Vertical Warping Deviation (b) Standard Deviation (c) Horizontal Warping Deviation [dataset: ECG]}
 	\label{fig:three_deviation}
 \end{figure}
@@ -182,14 +182,14 @@ We can see that in \cref{fig:instances_and_dba_trace} the DBA can well capture t
 
 \begin{figure}[htbp]	
 	\centering
-	\includegraphics[width=\linewidth]{pics/properties/trace/cluster0_dba}
+	\includegraphics[width=\linewidth]{pics/properties/trace/cluster0_dba_new}
 	\caption{(a) DBA (b) instances [dataset: Trace]}
 	\label{fig:instances_and_dba_trace}
 \end{figure}
 
 \begin{figure}[htbp]
 	\centering
-	\includegraphics[width=\linewidth]{pics/properties/trace/cluster0_deviation}
+	\includegraphics[width=\linewidth]{pics/properties/trace/cluster0_deviation_new}
 	\caption{(a) Vertical Warping Deviation (b) Standard Deviation (c) Horizontal Warping Deviation [dataset: Trace]}
 	\label{fig:three_deviation_trace}
 \end{figure}
