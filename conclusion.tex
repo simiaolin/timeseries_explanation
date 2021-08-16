@@ -1,28 +1,39 @@
 \chapter{Conclusion}
 \label{cha:conclusion}
 
-In this thesis we propose two new ways to explain the clustering result of $\mathrm{COBRAS^{TS}}$. The first one is to show the main properties of a cluster such as DBA and our newly proposed warping deviations. The second one is to chain two sequences with constraints obtained during the process of $\mathrm{COBRAS^{TS}}$ to explain why they belong to the same cluster or why they are in different clusters.
+In this thesis we propose two new ways to explain the clustering result of $\mathrm{COBRAS^{TS}}$. The first one is a novel technique, called warping deviations, to show the main properties of a cluster based on DBA. The second one is to chain two sequences with constraints obtained during the process of semi-supervised clustering,$\mathrm{COBRAS^{TS}}$ to explain why they belong to the same cluster or why they are in different clusters.
 
 \section{Explaining properties of a cluster}
-Given the clustering result, we first provide users a general overview of each cluster by showing them the main properties such as average and deviations of the cluster. We choose DBA as the average because it uses DTW as the distance measure while $\mathrm{COBRAS^{DTW}}$ also uses DTW as the distance measure. Besides, DTW itself has good explainability. We propose warping deviations, horizontal warping deviation, and vertical warping deviation respectively. They are the deviations that reflect how much is warping in DTW. We can see that horizontal warping deviation is much bigger than the vertical warping deviation, which is in line with the fact that DTW warps the sequences in the time axis to shorten their distances in the value axis.
+Given the clustering result, we first provide users a general overview of each cluster by showing them the main properties such as average and multiple types of deviations of the cluster. We choose DBA as the average because it uses DTW as the distance measure while $\mathrm{COBRAS^{DTW}}$ also uses DTW as the distance measure. Besides, DTW itself has good explainability. We propose warping deviations, horizontal warping deviation, and vertical warping deviation respectively. They are the deviations that reflect how much warping DTW makes in the time and value axes. This enables us to decompose the deviations in the time series into X-axis (the horizontal, time axis) and Y-axis (the vertical, value axis) components by taking into account how they are compared with each other in the DTW process. We can see that horizontal warping deviation is much bigger than the vertical warping deviation, which is in line with the fact that DTW warps the sequences in the time axis to shorten their distances in the value axis.
+
+
 
 \section{Explaining the relation between two given sequences}
-Apart from illustrating clustering in a general way, we also illustrate clustering from a specific perspective. We provide users the chance to argue the relation between two sequences, such as what leads them to be in the same cluster, or what separates them apart. We chain two sequences with the constraints obtained during the process of $\mathrm{COBRAS^{TS}}$ to answer users' questions. It gives users a window to look back whether and how their expert knowledge is applied in $\mathrm{COBRAS^{TS}}$. The idea can not only be used in $\mathrm{COBRAS^{TS}}$, but can also be used in other constraint-based clusterings as long as the instances are visualization friendly.
+Apart from illustrating the clustering in a general way, we also illustrate given clustering from a specific perspective. We provide users the chance to argue the relation between any two sequences in the dataset, such as what leads them to be in the same cluster, or what separates them apart. We chain two sequences with the constraints obtained during the process of $\mathrm{COBRAS^{TS}}$ to answer users' questions. It gives users a window to look back whether and how their expert knowledge is applied in $\mathrm{COBRAS^{TS}}$. The idea can not only be used in $\mathrm{COBRAS^{TS}}$, but can also be used in other constraint-based clustering techniques as long as the instances are visualization friendly.
 
 
-\subsection{Future works}
-Here we provide possible improvements on the methods we propose.
+\section{Implementation publicly available on Github} \label{sec:github}
+
+We use Python to implement our proposed ideas. Our codes are publicly available on Github.
+
+\begin{itemize}
+	\item Explaining properties of a cluster: \href{https://github.com/simiaolin/DBA.git}{https://github.com/simiaolin/DBA.git}.
+	
+	 \item	Explaining the relation between two given sequences: \href{https://github.com/simiaolin/cobras.git}{https://github.com/simiaolin/cobras.git}.
+	
+\end{itemize}
+
+\section{Future works}
+\par Here we provide possible improvements on the methods we propose.
 
 \begin{enumerate}
-	\item When presenting the properties of a cluster, we show the sequences inside the cluster. It might lead to heavy overlapping if the number of sequences is too big. In this case, we can consider only showing the representatives of the super-instances in the cluster
+	\item When presenting the properties of a cluster, we show the sequences inside the cluster. It might lead to heavy overlapping if the number of sequences is too big. In this case, we can consider only showing the representatives of the super-instances in the cluster. Alternatively, we can show the properties of each super-instance, and link them using the must-link constraints which keep them in the same cluster.
 	
-	\item When chaining two sequences with constraints obtained during $\mathrm{COBRAS^{TS}}$, we can confine the selected constraints to the ones that are truly used in merging stages. 
+	\item When chaining two sequences with constraints obtained during $\mathrm{COBRAS^{TS}}$, we can confine the selected constraints to the ones that are truly used in the merging phase of $\mathrm{COBRAS^{TS}}$. 
 	
 	\item We can record the "age" of the constraint and make sure the links on the constraint chain are relatively young because young constraints are more likely to contribute to the current clustering.
 	
-	\item We can give users a chance to select the longest length of the constraint chain in case it is too long and not user-friendly.
-	
-	
+	\item We can give users a chance to select the maximum length of the constraint chain in case it is too long and not user-friendly. As dissimilar sequence pairs in the same cluster are in greater need of must-links to illustrate their relation, we can sort the similarities between consecutive sequences on the must-link chain and only retain the most dissimilar ones to shorten the length of the must-link chain.
 \end{enumerate}
 
 

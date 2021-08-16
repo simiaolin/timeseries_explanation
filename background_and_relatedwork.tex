@@ -161,20 +161,20 @@ As can be seen from its name, DTW Barycenter Averaging (DBA) makes use of DTW. I
 
 \FloatBarrier 
 \subsection{Motivation for using DBA}\label{bg:dba}
-As we can see from \fref{fig:arithmetic} and \fref{fig:dba} \cite{dta_vs_arithmeticmean}, DBA can capture the most important trend of instances, while the characteristic of the original instances are averaged in the time axis so the information about peaks and troughs are blurred in the arithmetic mean. As a result, we select DBA as the averaging method in this thesis.
+As we can see from \fref{fig:arithmetic} \cite{dta_vs_arithmeticmean} and \fref{fig:dba} \cite{dta_vs_arithmeticmean}, DBA can capture the most important trend of instances, while the characteristic of the original instances are averaged in the time axis so the information about peaks and troughs are blurred in the arithmetic mean. As a result, we select DBA as the averaging method in this thesis.
 
 \begin{figure}[htbp]
 	\centering
 	\begin{minipage}[t]{0.48\textwidth}
 		\centering
 		\includegraphics[width=\linewidth]{pics/related_work/arithmetic_mean}
-		\caption{Arithmetic mean}
+		\caption{Arithmetic mean \cite{dta_vs_arithmeticmean}}
 		\label{fig:arithmetic}
 	\end{minipage}
 	\begin{minipage}[t]{0.48\textwidth}
 		\centering
 		\includegraphics[width=\linewidth]{pics/related_work/DBA}
-		\caption{DBA}
+		\caption{DBA \cite{dta_vs_arithmeticmean}}
 		\label{fig:dba}
 	\end{minipage}
 \end{figure}
@@ -312,7 +312,7 @@ We had discussed COBRAS's ability to obtain perfect clustering efficiently as a 
 \section{Literature review on the explanation of time series clustering}
 We also do a literature review on the explanation of time series clustering. 
 
-In \cite{van1999cluster} Neth. Energy Research Foundation (ECN) proposed a calendar view of the clustering of the power demand of ECN in 1988. One the right of \cref{fig:power_demand_by_ecn} is the average sequence per cluster, showing the demand of power at different times of a day. On the left of \cref{fig:power_demand_by_ecn} there is a calendar, and each day in it has the same color as the cluster it belongs to. For instance, dates with dark blue color in the calendar are mainly weekends, and the average sequence in dark blue shows low power demand throughout the whole day. It indicates that the power demand in ECN is low on weekends in 1988, which is in line with common sense.
+In \cite{van1999cluster} Neth. Energy Research Foundation (ECN) proposed a calendar view of the clustering of the power demand of ECN in one year. One the right of \cref{fig:power_demand_by_ecn} is the average sequence per cluster, showing the demand of power at different times of a day. On the left of \cref{fig:power_demand_by_ecn} there is a calendar, and each day in it has the same color as the cluster it belongs to. For instance, dates with dark blue color in the calendar are mainly weekends, and the average sequence in dark blue shows low power demand throughout the whole day. It indicates that the power demand in ECN is low on weekends in 1988, which is in line with common sense.
 The calendar view of the clustering result is very clear and easy to understand. However, it is a method well designed for the calendar-based time series data and thus is not that general. Even though, its idea of representing a cluster with its average sequence is worthy of reference.
 
 \begin{figure}[htbp]

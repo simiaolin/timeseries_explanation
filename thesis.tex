@@ -46,7 +46,7 @@
 		
 		I would first like to thank my advisor, Aras Yurtman. You are always so supportive and patient. I learn a lot about how to research you at our weekly meeting. I could not have completed this thesis without the advice and encouragement you give me all the time. 
 		
-		I would also like to acknowledge my supervisors, Wannes Meert and Prof. Hendrik Blockeel,  whose expertise was invaluable in formulating the research questions and methodology. 
+		I would also like to acknowledge my supervisors, Prof. Hendrik Blockeel and Wannes Meert,  whose expertise was invaluable in formulating the research questions and methodology. 
 		
 		In addition, I would like to thank my accessor Oscar Mauricio Agudelo for reading the thesis.
 		
@@ -65,7 +65,7 @@
 		
 		In this thesis, we focus on the interpretability and explainability of the semi-supervised clustering of time series. We employ the most query-efficient technique to date, Constraint-based Repeated Aggregation and Splitting for Time Series ($ \mathrm{COBRAS^{TS}} $), which has been developed by the DTAI research group at KU Leuven. $ \mathrm{COBRAS^{DTW}} $ is one of the implementations of $ \mathrm{COBRAS^{TS}} $ that uses Dynamic Time Warping (DTW) to measure similarity between time series instances. DTW finds the best alignment between two time series instances by warping and computes their distance based on it. We also select DTW Barycenter Averaging (DBA) as the averaging method on time series data as it can capture the most important characteristic of time series instances, such as trends, peaks, and troughs, etc. Throughout the thesis, we mainly focus on explaining the clustering result of $ \mathrm{COBRAS^{DTW}} $. 
 		
-		We propose in this thesis two new ways of interpreting the clustering result of $ \mathrm{COBRAS^{TS}} $. The first one is to provide users an overview of the clustering by showing the main properties of the clusters such as DBA and our newly proposed warping deviations in the context of time series. In this way, we can help users build a general and intuitive understanding of the clustering result. The second one is proposed to answer more specific questions; in particular, why two given time series are in the same cluster or the different clusters. We chain the two time series with the constraints obtained in the process of $ \mathrm{COBRAS^{TS}} $. We represent the relation between the two time series in terms of the constraints obtained from queries asking the user so that the information provided by the expert in the semi-supervised learning process is used to describe the relation between the two time series. This enables the expert, who contributes to the clustering process, to analyze the result in terms of his contribution.
+		We propose in this thesis two new ways of interpreting the clustering result of $ \mathrm{COBRAS^{TS}} $. The first one is to provide users an overview of the clustering by showing main properties of clusters such as DBA and our newly proposed warping deviations in the context of time series. In this way, we can help users build a general and intuitive understanding of the clustering result. The second one is proposed to answer more specific questions; in particular, why two given time series are in the same cluster or in different clusters. We chain the two time series with the constraints obtained in the process of $ \mathrm{COBRAS^{TS}} $. We represent the relation between the two time series in terms of the constraints obtained from queries answered by the user so that the information provided by the expert in the semi-supervised learning process is used to describe the relation between the two time series. This enables the expert, who contributes to the clustering process, to analyze the result in terms of his contribution.
 		
 		
 		\par \textbf{Keywords: explainability, $ \mathrm{COBRAS^{TS}} $, DBA, DTW} 
@@ -79,11 +79,11 @@
 	%\listoffiguresandtables
 	% The list of symbols is also optional.
 	% This list must be created manually, e.g., as follows:
-	\chapter{List of Abbreviations and Symbols}
+	\chapter{List of Abbreviations}
 	\section*{Abbreviations}
 	\begin{flushleft}
 		\renewcommand{\arraystretch}{1.1}
-		\begin{tabularx}{\textwidth}{@{}p{20mm}X@{}}
+		\begin{tabularx}{\textwidth}{@{}p{24mm}X@{}}
 			
 			DTW       & Dynamic Time Warping     \\ 
 			
@@ -93,10 +93,12 @@
 			$ \mathrm{COBRAS^{TS} }$    & Constraint-based Repeated Aggregation and Splitting for Time Series\\
 			COBRAS     & Constraint-based Repeated Aggregation and Splitting \\
 			$ \mathrm{COBRAS^{DTW} }$    & Constraint-based Repeated Aggregation and Splitting for Time Series using DTW as distance measure\\
+			ECG & electrocardiogram \\
+			BFS & Breadth-First Search\\
 		\end{tabularx}
 	\end{flushleft}
 	\iffalse
-	\section*{Symbols}
+%	\section*{Symbols}
 	\begin{flushleft}
 		\renewcommand{\arraystretch}{1.1}
 		\begin{tabularx}{\textwidth}{@{}p{12mm}X@{}}
