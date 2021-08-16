@@ -21,7 +21,7 @@ Suppose the length requirements are satisfied, there still exists big problems s
 	
 \end{figure}
 
-More details about warping deviation are shown in \cref{algo:warping_deviation}. The main difference between the warping deviation and traditional unwarping deviation is the selection of coordinates that are used to compare with the coordinates in DBA. In traditional unwarping deviation \cref{algo:unwarping_deviation}, for each coordinate $ C_i $ with index $ i $ in DBA, those coordinates in sequences in the same time axis $ S_{1_i}, S_{2_i}, ...,S_{n_i} $ as are chosen. In our newly proposed warping deviation, for each coordinate $ C_i $ in DBA, those coordinates in sequences that are warped to $ C_i $ in DTW are chosen.
+details about warping deviation are shown in \cref{algo:warping_deviation}. The main difference between the warping deviation and traditional unwarping deviation is the selection of coordinates that are used to compare with the coordinates in DBA. In traditional unwarping deviation \cref{algo:unwarping_deviation}, for each coordinate $ C_i $ with index $ i $ in DBA, those coordinates in sequences in the same time axis $ S_{1_i}, S_{2_i}, ...,S_{n_i} $ as are chosen. In our newly proposed warping deviation, for each coordinate $ C_i $ in DBA, those coordinates in sequences that are warped to $ C_i $ in DTW are chosen.
 
 For every coordinate, it has two values, X value (value on the time axis) and Y value. Normally, when talking about deviation, we only care about the deviation on the Y axis, because there is a premise that Xvalues of coordinates mapped to the coordinate on the DBA are the same, so it is meaningless to compute the deviation on the X-axis. However, in the context of DTW, the values of coordinates warped to a coordinate in DBA on the X-axis are not the same, and the difference between them implies important information like how much DTW warps sequences to associate them with DBA. As a result, apart from \textbf{vertical warping deviation}, which reflects the deviation on the Y axis, we also introduce \textbf{horizontal warping deviation} that reflects the deviation on the X-axis. 
 
@@ -119,13 +119,14 @@ We select \textbf{ECG} and \textbf{Trace} to experiment because the lengths of t
 
 
 \section{Experiments}
-The experiment procedure is designed as below. \cref{fig:properties_process} shows the flow of the experiment.
+The experiment procedure is designed as below. \cref{fig:properties_process} shows the flow of the experiment. If the query budget is too large, there might be too many super-instances and each super-instance contains few instances, which makes super-instances lose the meaning of being super-instance. On the contrary, if the query budget is too small, there might be few super-instances, and each super-instance contains many instances, which makes the clustering lose its meaning. There are 200 sequences in both datasets, so we select the query budget to be a moderate number-100.
+
 \begin{enumerate} 
-	\item Perform $ \mathrm{COBRAS^{TS}} $ on the whole dataset and obtain the clustering result. We mock the query part by getting constraints from the labels of the instances. If the labels of two instances are the same, we suppose there is a must-link between them. On the contrary, if the labels of two instances are different, we suppose there is a cannot-link between them. After obtaining the clustering result, select one cluster of interest at a time to explain its properties.
-	\item Compute the DBA of the sequences in the selected cluster, which is shown in the purple arrow in \cref{fig:properties_process} .
+	\item Perform $ \mathrm{COBRAS^{TS}} $ on the whole dataset and obtain the clustering result. We mock the query part by getting constraints from the labels of the instances. If the labels of two instances are the same, we suppose there is a must-link between them. On the contrary, if the labels of two instances are different, we suppose there is a cannot-link between them. In other words, we use the true labels only to simulate the expert in semi-supervised clustering (COBRAS). We do not use them elsewhere, e.g. in explaining and interpreting the clustering. After obtaining the clustering result, select one cluster of interest at a time to explain its properties.
+	\item Compute the DBA of the sequences in the selected cluster, which is shown in the purple arrow in \cref{fig:properties_process}.
 	\item Based on DBA and the sequences, compute the vertical warping deviation, which is shown in the pink arrows. Similarly, compute the horizontal warping deviation, which is shown in green arrows. 
 	We also compute the traditional unwarping deviation, but it is not shown in \cref{fig:properties_process} because it is relatively irrelevant. We still compute it as we want to compare the vertical warping deviation to see the difference, and we show it in \cref{fig:three_deviation} and \cref{fig:three_deviation_trace}.
-	\item Show DBA together with warping deviations. Specifically, surround each coordinate of DBA with an eclipse with a width of the corresponding horizontal warping deviation and a height of the corresponding vertical warping deviation. This step is shown in blue arrows. 
+	\item Show DBA together with warping deviations. Specifically, surround each coordinate of DBA with an eclipse with a width of the corresponding horizontal warping deviation and a height of the corresponding vertical warping deviation. This step is shown in blue arrows in \cref{fig:properties_process}. 
 \end{enumerate}
 
 \begin{figure}[htbp]
@@ -162,7 +163,7 @@ At around 40 on the time axis, the horizontal warping deviation is large, so the
 \end{figure}
 
 \FloatBarrier
-To combine the DBA and two types of warping deviations, we introduce \textbf{deviation eclipse}. For each coordinate in the DBA, we surround it with an eclipse, where the height of the eclipse is set to be the vertical warping deviation, and the width of the eclipse is set to be the horizontal warping deviation. The wider the eclipse is, the larger the horizontal warping deviation is for the corresponding coordinate. The taller the eclipse is, the larger the vertical warping deviation.
+To combine the DBA and two types of warping deviations, we introduce \textbf{deviation eclipse} in \cref{fig:dba_and_warpingdeviations}. For each coordinate in the DBA, we surround it with an eclipse, where the height of the eclipse is set to be the vertical warping deviation, and the width of the eclipse is set to be the horizontal warping deviation. The wider the eclipse is, the larger the horizontal warping deviation is for the corresponding coordinate. The taller the eclipse is, the larger the vertical warping deviation. The colors of the eclipses are only to distinguish them from each other; they do not have any meaning.
 
 \begin{figure}[htbp]
 	\centering

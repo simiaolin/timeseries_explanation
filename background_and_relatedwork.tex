@@ -106,6 +106,8 @@ Apart from selecting the proper distance measurement method for time series inst
 \subsection{DBA}
 As can be seen from its name, DTW Barycenter Averaging (DBA) makes use of DTW. It first initializes the average as the medoid of the time series instances, which is the one among all the time series instances that has the smallest sum of distances to all the other instances. After the initialization, DBA updates the average iteratively. \cref{algo:dba} shows how the average is updated at each iteration provided the old average and the sequences. At each iteration, it first computes the DTW between every sequence and the old average. For each coordinate in the old average, in every sequence there are one or more coordinates that are associated with it, DBA updates the coordinate with the barycenter of all the coordinates associated with it. DBA lets DTW refine its association iteratively and can converge the average gradually. DBA outperforms other averaging methods on sequences in a few ways. Firstly, it is a global averaging method, which means it is insensitive to the ordering of the sequences, which makes sure the stability of the average. Secondly, it modifies the coordinates of the average over time, but it doesn't change the length of the average, which is another sign of stability. Thirdly, the within-group sum of squares (WGSS) of DBA is much smaller than other averaging methods. Last but not least, it is more robust to the diversity of sequences, which means its performance is less influenced if sequences are more mixed. 
 
+\cref{algo:second}, \cref{algo:barycenter} and \cref{algo:dba} are taken from \cite{petitjean2011global}.
+
 \begin{algorithm}[h] 
 	\caption{second \cite{petitjean2011global}}
 	\label{algo:second}
@@ -159,7 +161,7 @@ As can be seen from its name, DTW Barycenter Averaging (DBA) makes use of DTW. I
 
 \FloatBarrier 
 \subsection{Motivation for using DBA}\label{bg:dba}
-As we can see from \fref{fig:arithmetic} and \fref{fig:dba} \cite{dta_vs_arithmeticmean}, DBA can capture the most important trend of instances, while the characteristic of the original instances are averaged in the time axis so the information about peaks and troughs are blurred in the arithmetic mean. As a result, we select DBA as the averaging method in this paper. 
+As we can see from \fref{fig:arithmetic} and \fref{fig:dba} \cite{dta_vs_arithmeticmean}, DBA can capture the most important trend of instances, while the characteristic of the original instances are averaged in the time axis so the information about peaks and troughs are blurred in the arithmetic mean. As a result, we select DBA as the averaging method in this thesis.
 
 \begin{figure}[htbp]
 	\centering
@@ -204,7 +206,7 @@ All of the above clustering methods produce very good clustering. Still, they ne
 
 
 \begin{algorithm}[h]
-	\caption{Constraint-based Repeated Aggregation \cite{vancraenendonck2018cobra}}
+	\caption{Constraint-based Repeated Aggregation (COBRA) \cite{vancraenendonck2018cobra}}
 	\label{algo:cobra}
 	\begin{algorithmic}[1]
 		\REQUIRE $\mathit{D}$ : a dataset, $\mathit{N_s}$ : the number of super-instances
@@ -254,7 +256,7 @@ A COBRAS procedure is elaborated in \fref{fig:cobras_procedure}. At the very beg
 
 More details about COBRAS can be found in \cref{algo:cobras}.
 \begin{algorithm}[h]
-	\caption{Constraint-based Repeated Aggregation and Splitting \cite{van2018cobras}}
+	\caption{Constraint-based Repeated Aggregation and Splitting (COBRAS) \cite{van2018cobras}}
 	\label{algo:cobras}
 	\hspace*{\algorithmicindent} \textbf{$\mathcal{X}$: a dataset, $\mathit{q}$: a query limit} \\
 	\hspace*{\algorithmicindent} \textbf{$\mathcal{C}$: a clustering of $\mathit{D}$} 

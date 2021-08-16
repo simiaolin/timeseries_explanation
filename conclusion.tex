@@ -6,7 +6,7 @@ In this thesis we propose two new ways to explain the clustering result of $\mat
 \section{Explaining properties of a cluster}
 Given the clustering result, we first provide users a general overview of each cluster by showing them the main properties such as average and deviations of the cluster. We choose DBA as the average because it uses DTW as the distance measure while $\mathrm{COBRAS^{DTW}}$ also uses DTW as the distance measure. Besides, DTW itself has good explainability. We propose warping deviations, horizontal warping deviation, and vertical warping deviation respectively. They are the deviations that reflect how much is warping in DTW. We can see that horizontal warping deviation is much bigger than the vertical warping deviation, which is in line with the fact that DTW warps the sequences in the time axis to shorten their distances in the value axis.
 
-\section{Explaining relation between two sequences}
+\section{Explaining the relation between two given sequences}
 Apart from illustrating clustering in a general way, we also illustrate clustering from a specific perspective. We provide users the chance to argue the relation between two sequences, such as what leads them to be in the same cluster, or what separates them apart. We chain two sequences with the constraints obtained during the process of $\mathrm{COBRAS^{TS}}$ to answer users' questions. It gives users a window to look back whether and how their expert knowledge is applied in $\mathrm{COBRAS^{TS}}$. The idea can not only be used in $\mathrm{COBRAS^{TS}}$, but can also be used in other constraint-based clusterings as long as the instances are visualization friendly.
 
 
